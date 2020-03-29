@@ -29,4 +29,31 @@
     <string name="delete_feed_succ">Delete Feed Item Successful</string>
     <string name="del_item_feed_failed">Delete Feed Item Failed</string>
     <string name="parcel">parcel</string>
+
+
+    <string name="manager">Manager</string>
+
+    <string name="engineer">Engineer</string>
+
+    <string name="customer">Customer</string>
+
+    <string name="add_login_title">Covid-19 Status Tracking</string>
+
+    <string name="enter_user_id">Enter User Id</string>
+
+    <string name="login">Login</string>
+
+    <string name="user_name_title">UserName</string>
+
+    <string name="personal_status">Personal Status</string>
+
+    <string name="customer_status">Customer Status</string>
+
+    <string name="family_status">Family Status</string>
+
+    <string name="submit">Submit</string>
+
+    <string name="enter_user_name">Enter user name</string>
+
+    <string name="role_token">Role</string>
 </resources>
