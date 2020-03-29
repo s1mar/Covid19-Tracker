@@ -13,4 +13,17 @@
     <string name="enter_employee_name">Enter Employee Name</string>
     <string name="token_not_applicable">n/a</string>
     <string name="title_employees_status">Employees Status</string>
+    <string name="feed_news">Feed News</string>
+    <string name="new_post">New Post</string>
+    <string name="post">POST</string>
+    <string name="subject">Subject</string>
+    <string name="description">Description</string>
+    <string name="fields_cant_empty">Fields can\'t be empty</string>
+    <string name="update_post_token">Update Post</string>
+    <string name="post_update_token">Post Update</string>
+    <string name="token_parcel">parcel</string>
+    <string name="cant_update_post">Something went wrong, couldn\'t update the post!</string>
+    <string name="post_update">Post Updated!</string>
+    <string name="succ_added_post">Posted!!</string>
+    <string name="post_failed">POST failed!</string>
 </resources>

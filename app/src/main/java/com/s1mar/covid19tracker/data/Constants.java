@@ -7,4 +7,8 @@ public class Constants {
     //Field in the above collection for User names
     public static final String FIELD_UNAME="user_name";
 
+    public static final String FEED = "Feed";
+    public static final String FIELD_SUBJECT= "subject";
+    public static final String FIELD_DESC = "desc";
+    public static final String FIELD_TS = "timestamp";
 }
