@@ -4,6 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 
 public class MFeedItem implements Parcelable {
 
@@ -11,6 +14,9 @@ public class MFeedItem implements Parcelable {
     private String id;
     private String subject;
     private String desc;
+
+    @ServerTimestamp
+    private Date time;
 
     public String getSubject() {
         return subject;
@@ -36,6 +42,17 @@ public class MFeedItem implements Parcelable {
         this.id = id;
     }
 
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public MFeedItem() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -46,18 +63,18 @@ public class MFeedItem implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.subject);
         dest.writeString(this.desc);
-    }
-
-    public MFeedItem() {
+        dest.writeLong(this.time != null ? this.time.getTime() : -1);
     }
 
     protected MFeedItem(Parcel in) {
         this.id = in.readString();
         this.subject = in.readString();
         this.desc = in.readString();
+        long tmpTime = in.readLong();
+        this.time = tmpTime == -1 ? null : new Date(tmpTime);
     }
 
-    public static final Parcelable.Creator<MFeedItem> CREATOR = new Parcelable.Creator<MFeedItem>() {
+    public static final Creator<MFeedItem> CREATOR = new Creator<MFeedItem>() {
         @Override
         public MFeedItem createFromParcel(Parcel source) {
             return new MFeedItem(source);

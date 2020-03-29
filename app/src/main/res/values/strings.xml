@@ -26,4 +26,7 @@
     <string name="post_update">Post Updated!</string>
     <string name="succ_added_post">Posted!!</string>
     <string name="post_failed">POST failed!</string>
+    <string name="delete_feed_succ">Delete Feed Item Successful</string>
+    <string name="del_item_feed_failed">Delete Feed Item Failed</string>
+    <string name="parcel">parcel</string>
 </resources>

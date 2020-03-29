@@ -26,7 +26,7 @@ public class Activity_EmpStatus extends AppCompatActivity {
         mAdapter = new RecyclerAdapter_Employee();
         binder.recycler.setAdapter(mAdapter);
         binder.fab.setOnClickListener(v->{
-            LoaderUtil.loadAct(this,Activity_AddEmp.class);
+            LoaderUtil.loadAct(this,Activity_AddEmp.class,null);
         });
         init();
         setContentView(binder.getRoot());

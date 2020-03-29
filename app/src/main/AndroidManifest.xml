@@ -19,6 +19,10 @@
 
         </activity>
         <activity android:name=".users.admin.Activity_AdminNewPost" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
+
+        </activity>
+
+        <activity android:name=".users.admin.Activity_FeedNews" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>

@@ -3,6 +3,7 @@ package com.s1mar.covid19tracker.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -19,10 +20,13 @@ public class LoaderUtil {
 
     private static String TAG = LoaderUtil.class.getSimpleName();
 
-    public static void loadAct(Context context, Class activityClass){
+    public static void loadAct(Context context, Class activityClass, @Nullable Parcelable parcel){
 
         try {
             Intent intent = new Intent(context, activityClass);
+            if(parcel!=null){
+                intent.putExtra(context.getString(R.string.parcel),parcel);
+            }
             context.startActivity(intent);
         }
         catch (Exception ex){

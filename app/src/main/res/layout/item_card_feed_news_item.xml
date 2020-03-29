@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_margin="10dp"
         android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -21,15 +22,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <TextView
-                android:id="@+id/timeStamp"
+                android:id="@+id/subjectTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxEms="7"
+                android:maxLines="1"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/edit"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.29000002"
+                tools:text="Subject Title" />
+
+            <TextView
+                android:id="@+id/timeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/subjectTitle"
                 tools:text="12-12-20 08:00PM" />
 
             <ImageView

@@ -32,7 +32,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
     }
 
     public void updateSet(List<MEmployee> dataSet,boolean isReset){
-        if(dataSet!=null && !dataSet.isEmpty()){
+        if(dataSet!=null){
             if(isReset){
                 mDataSet.clear();
             }

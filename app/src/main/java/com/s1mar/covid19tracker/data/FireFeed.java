@@ -1,5 +1,6 @@
 package com.s1mar.covid19tracker.data;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.s1mar.covid19tracker.data.models.MFeedItem;
 import com.s1mar.covid19tracker.functional_interfaces.IAction;
@@ -40,16 +41,8 @@ public class FireFeed {
     }
 
     public static void deleteItem(MFeedItem item,IAction action){
-        FirebaseFirestore.getInstance().collection(Constants.FEED).whereEqualTo("id",item.getId()).get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-
-                 try {
-                     queryDocumentSnapshots.getDocuments().get(0).getReference().delete()
-                             .addOnSuccessListener(action::onResult).addOnFailureListener(action::onResult);
-                 }catch (Exception ex){
-                     action.onResult(ex);
-                 }
-                }).addOnFailureListener(action::onResult);
+        FirebaseFirestore.getInstance().collection(Constants.FEED).document("/"+item.getId()).delete()
+                .addOnSuccessListener(action::onResult).addOnFailureListener(action::onResult);
     }
 
     public static void getFeed(IAction action){
