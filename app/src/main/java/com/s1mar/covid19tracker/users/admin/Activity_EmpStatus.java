@@ -37,7 +37,7 @@ public class Activity_EmpStatus extends AppCompatActivity {
 
         FirebaseFirestore.getInstance().collection(Constants.USERS).addSnapshotListener((queryDocumentSnapshots, e) -> {
 
-            if(queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
+            if(queryDocumentSnapshots!=null){
 
                 List<MEmployee> employees = queryDocumentSnapshots.toObjects(MEmployee.class);
                 mAdapter.updateSet(employees,true);

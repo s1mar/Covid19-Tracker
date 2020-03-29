@@ -26,10 +26,10 @@ public class FireFeed {
 
     public static void updateItem(MFeedItem feedItem,IAction action){
 
-        FirebaseFirestore.getInstance().collection(Constants.FEED).whereEqualTo("id",feedItem.getId()).get()
+        FirebaseFirestore.getInstance().collection(Constants.FEED).document("/"+feedItem.getId()).get()
                 .addOnCompleteListener(task -> {
                    try{
-                       task.getResult().getDocuments().get(0).getReference().set(feedItem)
+                       task.getResult().getReference().set(feedItem)
                                .addOnSuccessListener(action::onResult)
                                .addOnFailureListener(action::onResult);
 

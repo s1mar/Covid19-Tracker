@@ -57,7 +57,7 @@ public class Activity_FeedNews extends AppCompatActivity {
         //Populate with data
         FirebaseFirestore.getInstance().collection(Constants.FEED).addSnapshotListener((queryDocumentSnapshots, e) -> {
 
-            if(queryDocumentSnapshots!=null && !queryDocumentSnapshots.isEmpty()){
+            if(queryDocumentSnapshots!=null){
                 List<MFeedItem> feedNews = queryDocumentSnapshots.toObjects(MFeedItem.class);
                 mAdapter.updateDataSet(feedNews,true);
         }

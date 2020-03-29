@@ -61,9 +61,12 @@ public class Activity_AdminNewPost extends AppCompatActivity {
             }
 
             if(isUpdate){
+                feedItem.setSubject(subject);
+                feedItem.setDesc(description);
                 FireFeed.updateItem(feedItem,result -> {
                     if(result instanceof Exception){
                         mToaster.showToast(getString(R.string.cant_update_post),4);
+                        Log.e(TAG, "FireFreed.updateItem(): "+result);
                     }
                     else{
                         mToaster.showToast(getString(R.string.post_update),4);
