@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+    viewBinding {
+        enabled = true
+    }
+    defaultConfig {
+        applicationId "com.s1mar.covid19tracker"
+        multiDexEnabled true
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+}
+ext {
+    APP_COMPAT_VER = "1.1.0"
+    CARD_VIEW_VER = "1.0.0"
+    FIRESTORE_VER = "21.4.1"
+    AUTH_VER = "19.3.0"
+    CONSTRAINT_VER = "1.1.3"
+    LIFECYCLE_VER = "2.2.0"
+    MULTIDEX_VER = "2.0.1"
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.google.android.material:material:$APP_COMPAT_VER"
+    implementation "androidx.recyclerview:recyclerview:$APP_COMPAT_VER"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$LIFECYCLE_VER"
+    implementation "androidx.appcompat:appcompat:$APP_COMPAT_VER"
+    implementation "androidx.constraintlayout:constraintlayout:$CONSTRAINT_VER"
+    implementation "androidx.cardview:cardview:$CARD_VIEW_VER"
+    implementation "com.google.firebase:firebase-firestore:$FIRESTORE_VER"
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "androidx.multidex:multidex:$MULTIDEX_VER"
+}

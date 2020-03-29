@@ -1,0 +1,26 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.s1mar.covid19tracker">
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+
+        <activity android:name=".users.admin.Activity_AddEmp" android:screenOrientation="sensorPortrait"
+            tools:ignore="LockedOrientationActivity">
+
+        </activity>
+        <activity android:name=".users.admin.Activity_EmpStatus" android:screenOrientation="sensorPortrait"  tools:ignore="LockedOrientationActivity">
+        <intent-filter>
+            <category android:name="android.intent.category.LAUNCHER"/>
+            <action android:name="android.intent.action.MAIN"/>
+        </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

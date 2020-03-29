@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "965083775547",
+    "firebase_url": "https://covidtracker-aj.firebaseio.com",
+    "project_id": "covidtracker-aj",
+    "storage_bucket": "covidtracker-aj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965083775547:android:675400fc70e95a9263521e",
+        "android_client_info": {
+          "package_name": "com.s1mar.covid19tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965083775547-edhp9ucp1i7q4pdsiarqqus49q0nslv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ-_7vvlfKCoMJ7KrT15TfJny3CMd-H2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965083775547-edhp9ucp1i7q4pdsiarqqus49q0nslv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
