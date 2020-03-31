@@ -59,4 +59,8 @@
     <string name="go_to_profile">Go to Profile</string>
     <string name="enginner_home_page">Engineer Home Page</string>
     <string name="home_page">Home</string>
+    <string name="sumary_count">Summary Count at Working Place</string>
+    <string name="sumary_personal_status">Summary Personal Status</string>
+    <string name="overall_status">Overall Status</string>
+    <string name="users_list">Users list</string>
 </resources>
