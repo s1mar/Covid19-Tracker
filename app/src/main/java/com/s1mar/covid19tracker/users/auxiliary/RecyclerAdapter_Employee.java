@@ -69,6 +69,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
        Spannable span = new SpannableString(healthFinal);
        span.setSpan(new ForegroundColorSpan(color), health.length(), healthFinal.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
        holder.binder.selfStatus.setText(span);
+
     }
 
     private void bindFamilyHealthStatus(ViewHolder holder,MEmployee employee){

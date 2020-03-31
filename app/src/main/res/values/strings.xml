@@ -63,4 +63,5 @@
     <string name="sumary_personal_status">Summary Personal Status</string>
     <string name="overall_status">Overall Status</string>
     <string name="users_list">Users list</string>
+    <string name="add_user_title">Add User</string>
 </resources>
