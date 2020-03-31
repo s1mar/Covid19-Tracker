@@ -17,21 +17,21 @@
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Oliver Queen" />
+            tools:text="@string/sumary_personal_status" />
 
         <TextView
             app:layout_constraintStart_toStartOf="@+id/txt_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_name"
             app:layout_constraintHorizontal_bias="0"
-            android:id="@+id/selfStatus"
-            tools:text="My Health: Infected"
+            android:id="@+id/txt_sumary_normal"
+            tools:text="Normal= xxEng"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -39,10 +39,20 @@
         <TextView
             app:layout_constraintStart_toStartOf="@+id/txt_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/selfStatus"
+            app:layout_constraintTop_toBottomOf="@id/txt_sumary_normal"
             app:layout_constraintHorizontal_bias="0"
-            android:id="@+id/familyStatus"
-            tools:text="Family Health: Infected"
+            android:id="@+id/txt_sumary_observation"
+            tools:text="Observation= xxEng"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            app:layout_constraintStart_toStartOf="@+id/txt_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_sumary_observation"
+            app:layout_constraintHorizontal_bias="0"
+            android:id="@+id/txt_sumary_infected"
+            tools:text="Observation= xxEng"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

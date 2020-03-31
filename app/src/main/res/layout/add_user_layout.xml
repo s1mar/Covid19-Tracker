@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -24,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="@string/add_employee_title"
+                android:text="@string/add_user_title"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="Employee Name"
+            android:text="User Name"
             android:textColor="@color/mediumTurquoise"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -63,9 +64,44 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:hint="@string/enter_employee_name"
+            android:hint="@string/enter_user_name"
             android:textSize="18sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="@string/role_token"
+            android:textColor="@color/mediumTurquoise"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <RadioButton android:id="@+id/radio_manager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/manager"
+                android:buttonTint="@color/mediumTurquoise"/>
+
+            <RadioButton
+                android:id="@+id/radio_engineer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/engineer"
+                android:buttonTint="@color/mediumTurquoise"
+                />
+
+            <RadioButton android:id="@+id/radio_customer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer"
+                android:buttonTint="@color/mediumTurquoise"/>
+        </RadioGroup>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +111,6 @@
             android:textColor="@color/mediumTurquoise"
             android:textSize="20sp"
             android:textStyle="bold" />
-
         <EditText
             android:inputType="text"
             android:maxLength="14"
@@ -87,7 +122,6 @@
             android:autofillHints="Enter the username in ascii"
             android:hint="@string/enter_username"
             android:textSize="18sp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
