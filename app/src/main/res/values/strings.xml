@@ -56,4 +56,7 @@
     <string name="enter_user_name">Enter user name</string>
 
     <string name="role_token">Role</string>
+    <string name="go_to_profile">Go to Profile</string>
+    <string name="enginner_home_page">Engineer Home Page</string>
+    <string name="home_page">Home</string>
 </resources>
