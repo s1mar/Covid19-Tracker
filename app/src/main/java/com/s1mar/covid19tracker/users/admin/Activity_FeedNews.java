@@ -2,6 +2,7 @@ package com.s1mar.covid19tracker.users.admin;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,11 @@ public class Activity_FeedNews extends AppCompatActivity {
         mToaster = new Toaster(this);
         isAdmin = determineIsAdmin();
         initActionsAndAdapter(binder);
-        initListeners(binder);
+        if(isAdmin) {
+            initListeners(binder);
+        }else{
+            binder.post.setVisibility(View.GONE);
+        }
         setContentView(binder.getRoot());
     }
 

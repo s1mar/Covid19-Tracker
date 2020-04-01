@@ -17,6 +17,7 @@ import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActUserProfileBinding;
+import com.s1mar.covid19tracker.users.admin.Activity_FeedNews;
 import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
@@ -127,7 +128,7 @@ public class EmployeePanel extends AppCompatActivity {
         });
 
         mBinder.feedCard.setOnClickListener(v->{
-
+            LoaderUtil.loadAct(this, Activity_FeedNews.class,null);
         });
 
     }
