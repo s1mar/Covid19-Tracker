@@ -3,7 +3,7 @@ package com.s1mar.covid19tracker;
 import android.util.Log;
 
 import com.s1mar.covid19tracker.data.FireUsers;
-import com.s1mar.covid19tracker.data.models.MEmployee;
+import com.s1mar.covid19tracker.data.models.MUser;
 
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class ExampleUnitTest {
     }
     @Test
     public void updateUser(){
-        MEmployee employee = new MEmployee();
+        MUser employee = new MUser();
         employee.setUsername("Oliver Queen");
         employee.setAdmin(false);
         FireUsers.updateUser(employee,result -> {

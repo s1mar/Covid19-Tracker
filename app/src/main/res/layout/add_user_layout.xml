@@ -38,14 +38,15 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/header_bar"
-        app:layout_constraintVertical_bias="0.32999998">
+        app:layout_constraintTop_toBottomOf="@id/header_bar"
+        app:layout_constraintVertical_bias="0.07999998">
 
         <TextView
             android:layout_width="wrap_content"
@@ -58,13 +59,13 @@
             android:textStyle="bold" />
 
         <EditText
-            android:inputType="text"
             android:id="@+id/name_etxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:hint="@string/enter_user_name"
+            android:inputType="text"
             android:textSize="18sp" />
 
         <TextView
@@ -78,30 +79,34 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/roleGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="10dp">
-            <RadioButton android:id="@+id/radio_manager"
+            android:layout_margin="10dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radio_manager"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/manager"
-                android:buttonTint="@color/mediumTurquoise"/>
+                android:buttonTint="@color/mediumTurquoise"
+                android:text="@string/manager" />
 
             <RadioButton
                 android:id="@+id/radio_engineer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/engineer"
                 android:buttonTint="@color/mediumTurquoise"
-                />
+                android:text="@string/engineer" />
 
-            <RadioButton android:id="@+id/radio_customer"
+            <RadioButton
+                android:id="@+id/radio_customer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/customer"
-                android:buttonTint="@color/mediumTurquoise"/>
+                android:buttonTint="@color/mediumTurquoise"
+                android:text="@string/customer" />
         </RadioGroup>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,9 +116,8 @@
             android:textColor="@color/mediumTurquoise"
             android:textSize="20sp"
             android:textStyle="bold" />
+
         <EditText
-            android:inputType="text"
-            android:maxLength="14"
             android:id="@+id/username_etxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -121,7 +125,10 @@
             android:layout_weight="1"
             android:autofillHints="Enter the username in ascii"
             android:hint="@string/enter_username"
+            android:inputType="text"
+            android:maxLength="14"
             android:textSize="18sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -133,8 +140,6 @@
             android:textStyle="bold" />
 
         <EditText
-            android:maxLength="14"
-            android:inputType="text"
             android:id="@+id/password_etxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,22 +147,24 @@
             android:layout_weight="1"
             android:autofillHints="Enter the password"
             android:hint="@string/enter_password"
+            android:inputType="text"
+            android:maxLength="14"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/submit"
-            android:textSize="18sp"
             android:layout_width="110dp"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:background="@color/mediumTurquoise"
             android:text="@string/add"
             android:textColor="@android:color/white"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

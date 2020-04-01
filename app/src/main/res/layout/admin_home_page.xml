@@ -46,20 +46,18 @@ xmlns:tools="http://schemas.android.com/tools">
 
     <include
         android:id="@+id/layout_sumary_engineer_health_status"
-        layout="@layout/item_card_engineer_health_status"
-        />
+        layout="@layout/item_card_engineer_health_status" />
 
     <Button
+        android:id="@+id/btn_overall_status"
         android:layout_width="300dp"
-        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/btn_overall_status"
+        android:layout_marginTop="20dp"
         android:background="@color/mediumTurquoise"
-        android:text="@string/overall_status"
         android:padding="20dp"
-        android:textSize="20sp"
-        />
+        android:text="@string/employee_management"
+        android:textSize="20sp" />
 
     <Button
         android:layout_width="300dp"
@@ -71,17 +69,6 @@ xmlns:tools="http://schemas.android.com/tools">
         android:padding="20dp"
         android:textSize="20sp"
         android:layout_margin="20dp"
-        />
-
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/btn_users_list"
-        android:background="@color/mediumTurquoise"
-        android:text="@string/users_list"
-        android:padding="20dp"
-        android:textSize="20sp"
         />
 
 

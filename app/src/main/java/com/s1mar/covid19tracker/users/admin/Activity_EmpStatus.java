@@ -1,6 +1,4 @@
 package com.s1mar.covid19tracker.users.admin;
-
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -8,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.s1mar.covid19tracker.data.Constants;
-import com.s1mar.covid19tracker.data.models.MEmployee;
+import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.AdminEmpStatusLayoutBinding;
 import com.s1mar.covid19tracker.users.auxiliary.RecyclerAdapter_Employee;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
@@ -39,7 +37,7 @@ public class Activity_EmpStatus extends AppCompatActivity {
 
             if(queryDocumentSnapshots!=null){
 
-                List<MEmployee> employees = queryDocumentSnapshots.toObjects(MEmployee.class);
+                List<MUser> employees = queryDocumentSnapshots.toObjects(MUser.class);
                 mAdapter.updateSet(employees,true);
             }
 

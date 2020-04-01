@@ -10,19 +10,21 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.s1mar.covid19tracker.R;
 
-import com.s1mar.covid19tracker.data.models.MEmployee;
+import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ItemCardEmpStatusBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapter_Employee.ViewHolder> {
 
-    private List<MEmployee> mDataSet = new ArrayList<MEmployee>(0);
-
+    private List<MUser> mDataSet = new ArrayList<MUser>(0);
+    private HashMap<MUser,Integer> clientHealthStatusMap = new HashMap<>(0);
 
     @NonNull
     @Override
@@ -31,12 +33,13 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         return new ViewHolder(itemView);
     }
 
-    public void updateSet(List<MEmployee> dataSet,boolean isReset){
+    public void updateSet(List<MUser> dataSet, boolean isReset){
         if(dataSet!=null){
             if(isReset){
                 mDataSet.clear();
             }
             mDataSet.addAll(dataSet);
+            clientHealthStatusMap.clear();
             notifyDataSetChanged();
         }
     }
@@ -44,15 +47,29 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        MEmployee employee = mDataSet.get(position);
+        MUser employee = mDataSet.get(position);
         holder.binder.txtName.setText(employee.getName());
         //bind health status
         bindHealthStatus(holder,employee);
         //bind family health status
         bindFamilyHealthStatus(holder,employee);
+        //bind client health status
+        bindClientHealthStatus(holder,employee);
+        //bind emp location
+        bindLocationData(holder,employee);
     }
 
-    private void bindHealthStatus(ViewHolder holder,MEmployee employee){
+
+    private void bindLocationData(ViewHolder holder,MUser employee){
+        if (employee.isOnSite()){
+            holder.binder.workSite.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.onsite_48dp));
+        }
+        else {
+            holder.binder.workSite.setImageDrawable(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.home_48dp));
+        }
+    }
+
+    private void bindHealthStatus(ViewHolder holder, MUser employee){
        Integer healthStatus = employee.getHealthStatus();
        if(healthStatus==null){healthStatus = 0;}
        String health = "Health Status: ";
@@ -72,7 +89,39 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
     }
 
-    private void bindFamilyHealthStatus(ViewHolder holder,MEmployee employee){
+    private void bindClientHealthStatus(ViewHolder holder,MUser employee){
+        if(employee.getClients()==null || employee.getClients().isEmpty()){
+            holder.binder.clientStatus.setVisibility(View.GONE);
+            return;
+        }
+        if(!clientHealthStatusMap.containsKey(employee)){
+
+            int clientHealthAssumed = 0; //0->stands for healthy
+            for(MUser client: employee.getClients()){
+                clientHealthAssumed = client.getHealthStatus()>clientHealthAssumed?client.getHealthStatus():clientHealthAssumed;
+            }
+            clientHealthStatusMap.put(employee,clientHealthAssumed);
+        }
+        Integer healthStatus = clientHealthStatusMap.get(employee);
+        if(healthStatus==null){healthStatus = 0;}
+        String health = "Client Health Status: ";
+        String healthSub = "Healthy";
+        int color = Color.GREEN;
+        if(healthStatus==1){
+            healthSub = "Suspected";
+            color = Color.argb(100,255,165,0);
+        }else if(healthStatus==2){
+            healthSub = "Infected";
+            color = Color.RED;
+        }
+        String healthFinal = health+healthSub;
+        Spannable span = new SpannableString(healthFinal);
+        span.setSpan(new ForegroundColorSpan(color), health.length(), healthFinal.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.binder.clientStatus.setText(span);
+
+    }
+
+    private void bindFamilyHealthStatus(ViewHolder holder, MUser employee){
         Integer healthStatus  = employee.getFamilyHealthStatus();
         if(healthStatus==null){healthStatus = 0;}
         String health = "Family Health Status: ";

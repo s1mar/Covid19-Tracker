@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_name"
             app:layout_constraintHorizontal_bias="0"
-            android:id="@+id/txt_sumary_normal"
+            android:id="@+id/txt_health_normal"
             tools:text="Normal= xxEng"
             android:textSize="16sp"
             android:layout_width="wrap_content"
@@ -39,23 +39,24 @@
         <TextView
             app:layout_constraintStart_toStartOf="@+id/txt_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_sumary_normal"
+            app:layout_constraintTop_toBottomOf="@id/txt_health_normal"
             app:layout_constraintHorizontal_bias="0"
-            android:id="@+id/txt_sumary_observation"
+            android:id="@+id/txt_health_obs"
             tools:text="Observation= xxEng"
             android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
         <TextView
-            app:layout_constraintStart_toStartOf="@+id/txt_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_sumary_observation"
-            app:layout_constraintHorizontal_bias="0"
-            android:id="@+id/txt_sumary_infected"
-            tools:text="Observation= xxEng"
-            android:textSize="16sp"
+            android:id="@+id/txt_health_infected"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="@+id/txt_name"
+            app:layout_constraintTop_toBottomOf="@id/txt_health_obs"
+            tools:text="Infected= xxEng" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

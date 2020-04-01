@@ -2,25 +2,26 @@ package com.s1mar.covid19tracker.data.models;
 
 import java.util.List;
 
-public class MEmployee {
+public class MUser {
     private String name;
     private String username;
     private String password;
     private boolean onSite;
-    private boolean isAdmin;
+    private boolean admin;
     private Integer healthStatus;
     private Integer familyHealthStatus;
     private Integer clientHealthStatus;
     private List<String> placesVisited;
     private String currentLocation;
     private String homeTownAddress;
-    private List<MClient> clients;
+    private boolean isClient;
+    private List<MUser> clients;
 
-    public MEmployee() {
+    public MUser() {
 
     }
 
-    public MEmployee(String name,String username,String password) {
+    public MUser(String name, String username, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -75,20 +76,20 @@ public class MEmployee {
         this.homeTownAddress = homeTownAddress;
     }
 
-    public List<MClient> getClients() {
+    public List<MUser> getClients() {
         return clients;
     }
 
-    public void setClients(List<MClient> clients) {
+    public void setClients(List<MUser> clients) {
         this.clients = clients;
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
 
     public String getPassword() {
@@ -122,4 +123,14 @@ public class MEmployee {
     public void setClientHealthStatus(Integer clientHealthStatus) {
         this.clientHealthStatus = clientHealthStatus;
     }
+
+    public boolean isClient() {
+        return isClient;
+    }
+
+    public void setClient(boolean client) {
+        isClient = client;
+    }
+
+
 }

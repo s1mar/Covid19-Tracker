@@ -2,7 +2,7 @@ package com.s1mar.covid19tracker.data;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.s1mar.covid19tracker.data.models.MEmployee;
+import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.functional_interfaces.IAction;
 
 import static com.s1mar.covid19tracker.data.Constants.FIELD_UNAME;
@@ -59,7 +59,7 @@ public class FireUsers {
                     else if(result instanceof Boolean && !(Boolean) result)
                     {
                         //Since the user doesn't exist, let's insert it
-                        MEmployee employee = new MEmployee(name,username,password);
+                        MUser employee = new MUser(name,username,password);
                         FirebaseFirestore.getInstance().collection(USERS)
                                 .add(employee)
                                 .addOnSuccessListener(documentReference -> {action.onResult(true);})
@@ -72,6 +72,32 @@ public class FireUsers {
         });
 
     }
+
+    public static void addUser(MUser mUser,IAction action){
+
+        //Check to see whether the user already exists in the system
+        getUser(mUser.getUsername(),(result)->{
+
+            if(result instanceof Exception){
+                action.onResult(result); //operation failed
+            }
+            else if(result instanceof Boolean && !(Boolean) result)
+            {
+                //Since the user doesn't exist, let's insert it
+
+                FirebaseFirestore.getInstance().collection(USERS)
+                        .add(mUser)
+                        .addOnSuccessListener(documentReference -> {action.onResult(true);})
+                        .addOnFailureListener(action::onResult);
+            }
+            else{
+                action.onResult(false); //User already exists
+            }
+
+        });
+
+    }
+
 
     /**
      * If it returns true then it means the operation was successful, otherwise the operation failed
@@ -99,7 +125,7 @@ public class FireUsers {
      * @param employee
      * @param action
      */
-    public static void updateUser(MEmployee employee,IAction action){
+    public static void updateUser(MUser employee, IAction action){
 
         getUser(employee.getUsername(),result -> {
 

@@ -4,6 +4,9 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    dataBinding{
+        enabled = true
+    }
     viewBinding {
         enabled = true
     }
@@ -38,6 +41,7 @@ ext {
     CONSTRAINT_VER = "1.1.3"
     LIFECYCLE_VER = "2.2.0"
     MULTIDEX_VER = "2.0.1"
+    SPIN_VER = "1.4.0"
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -52,4 +56,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.multidex:multidex:$MULTIDEX_VER"
+    implementation "com.github.ybq:Android-SpinKit:$SPIN_VER"
 }

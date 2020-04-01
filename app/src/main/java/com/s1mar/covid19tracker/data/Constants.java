@@ -5,7 +5,7 @@ public class Constants {
     public static final String USERS  = "Users";
 
     //Field in the above collection for User names
-    public static final String FIELD_UNAME="user_name";
+    public static final String FIELD_UNAME="username";
 
     public static final String FEED = "Feed";
     public static final String FIELD_SUBJECT= "subject";

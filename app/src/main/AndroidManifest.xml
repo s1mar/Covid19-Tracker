@@ -23,6 +23,12 @@
         </activity>
 
         <activity android:name=".users.admin.Activity_FeedNews" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
+        </activity>
+
+        <activity android:name=".users.admin.Activity_AdminHome" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
+
+        </activity>
+        <activity android:name=".Activity_Login" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>

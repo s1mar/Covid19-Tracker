@@ -10,4 +10,5 @@ public class TextUtils {
         return  !TextUtils.isStringEmpty(token) && token.length()>=minLength && token.length()<=maxLength;
 
     }
+
 }

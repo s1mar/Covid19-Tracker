@@ -29,7 +29,14 @@
     <string name="delete_feed_succ">Delete Feed Item Successful</string>
     <string name="del_item_feed_failed">Delete Feed Item Failed</string>
     <string name="parcel">parcel</string>
+    <string name="num_working_from_home">Engineers working from home %d</string>
+    <string name="num_working_on_client_site">Engineers working on client site %d</string>
 
+    <!-- Health Status-->
+    <string name="health_normal">Normal %d</string>
+    <string name="health_infected">Infected %d</string>
+    <string name="health_observation">Under Observation %d</string>
+    <string name="home">Home</string>
 
     <string name="manager">Manager</string>
 
@@ -64,4 +71,10 @@
     <string name="overall_status">Overall Status</string>
     <string name="users_list">Users list</string>
     <string name="add_user_title">Add User</string>
+    <string name="employee_management">Employee Management</string>
+    <string name="summary_count_of_workplace">Summary Count of Workplace</string>
+    <string name="summary_personal_status">Summary Personal Status</string>
+    <string name="feed">Feed</string>
+    <string name="covid_19_status_tracking_service_thailand">COVID-19 Status Tracking Service Thailand</string>
+
 </resources>
