@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActUserProfileBinding;
 import com.s1mar.covid19tracker.users.admin.Activity_FeedNews;
+import com.s1mar.covid19tracker.users.auxiliary.DialogFragment_HealthSelect;
 import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
@@ -33,7 +35,10 @@ public class EmployeePanel extends AppCompatActivity {
     private ActUserProfileBinding mBinder;
     private MUser mUser;
 
-    private MUser tempUser;
+    int myHealthStatus;
+    int clientHealthStatus;
+    int familyHealthStatus;
+
     private Toaster mToaster;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,9 +72,10 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.myHealthStatus.txtHolder.setText("Personal Health");
         mBinder.familyHealthStatus.txtHolder.setText("Family Health");
         mBinder.clientHealthStatus.txtHolder.setText("Client Health");
-        int myHealthStatus = mUser.getHealthStatus()==null?0:mUser.getHealthStatus();
-        int clientHealthStatus = determineClientHealthStatus(mUser);
-        int familyHealthStatus = mUser.getFamilyHealthStatus()==null?0:mUser.getFamilyHealthStatus();
+
+        myHealthStatus = mUser.getHealthStatus()==null?0:mUser.getHealthStatus();
+        clientHealthStatus = determineClientHealthStatus(mUser);
+        familyHealthStatus = mUser.getFamilyHealthStatus()==null?0:mUser.getFamilyHealthStatus();
 
         setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
         setHealthStatus(mBinder.familyHealthStatus.imgHolder,familyHealthStatus);
@@ -82,7 +88,31 @@ public class EmployeePanel extends AppCompatActivity {
 
     }
 
+    private void onHealthImageClick(View imageView){
+        int healthStatus = imageView.getId()==mBinder.myHealthStatus.imgHolder.getId()?myHealthStatus:familyHealthStatus;
+        DialogFragment_HealthSelect.showDialog(this,healthStatus,result -> {
+
+            if(imageView.getId() == mBinder.myHealthStatus.imgHolder.getId()){
+                myHealthStatus = (int)result;
+                setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
+            }
+            else {
+                familyHealthStatus = (int) result;
+                setHealthStatus(mBinder.familyHealthStatus.imgHolder,myHealthStatus);
+            }
+
+
+        });
+
+    }
+
     private void hookListeners(){
+
+        mBinder.myHealthStatus.imgHolder.setOnClickListener(this::onHealthImageClick);
+        mBinder.familyHealthStatus.imgHolder.setOnClickListener(this::onHealthImageClick);
+        mBinder.clientHealthStatus.imgHolder.setOnClickListener(v -> {
+            mToaster.showToast("Client Health can not be set from here, please use the client management screen",TOAST_LENGTH);
+        });
 
         mBinder.btnSaveData.setOnClickListener(v->{
 
