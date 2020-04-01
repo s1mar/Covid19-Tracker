@@ -80,5 +80,6 @@
     <string name="save">SAVE</string>
     <string name="tick_if_your_client">Tick if your client</string>
     <string name="clients">Clients</string>
+    <string name="title_user_status">Users Status</string>
 
 </resources>

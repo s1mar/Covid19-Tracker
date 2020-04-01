@@ -73,10 +73,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
        Integer healthStatus = employee.getHealthStatus();
        if(healthStatus==null){healthStatus = 0;}
        String health = "Health Status: ";
-       String healthSub = "Healthy";
+       String healthSub = "Normal";
        int color = Color.GREEN;
        if(healthStatus==1){
-        healthSub = "Suspected";
+        healthSub = "Observation";
         color = Color.argb(100,255,165,0);
        }else if(healthStatus==2){
            healthSub = "Infected";
@@ -105,10 +105,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         Integer healthStatus = clientHealthStatusMap.get(employee);
         if(healthStatus==null){healthStatus = 0;}
         String health = "Client Health Status: ";
-        String healthSub = "Healthy";
+        String healthSub = "Normal";
         int color = Color.GREEN;
         if(healthStatus==1){
-            healthSub = "Suspected";
+            healthSub = "Observation";
             color = Color.argb(100,255,165,0);
         }else if(healthStatus==2){
             healthSub = "Infected";
@@ -125,10 +125,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         Integer healthStatus  = employee.getFamilyHealthStatus();
         if(healthStatus==null){healthStatus = 0;}
         String health = "Family Health Status: ";
-        String healthSub = "Healthy";
+        String healthSub = "Normal";
         int color = Color.GREEN;
         if(healthStatus==1){
-            healthSub = "Suspected";
+            healthSub = "Observation";
             color = Color.argb(100,255,165,0);
         }else if(healthStatus==2){
             healthSub = "Infected";
