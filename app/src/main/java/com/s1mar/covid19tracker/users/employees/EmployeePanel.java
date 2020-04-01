@@ -1,5 +1,6 @@
 package com.s1mar.covid19tracker.users.employees;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class EmployeePanel extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     void initUI() {
 
         mBinder.headerBar.title.setText(mUser.getUsername());
@@ -59,6 +61,9 @@ public class EmployeePanel extends AppCompatActivity {
         setWorkFromHomeOrNot(mUser.isOnSite());
 
         //Determine health statuses
+        mBinder.myHealthStatus.txtHolder.setText("Personal Health");
+        mBinder.familyHealthStatus.txtHolder.setText("Family Health");
+        mBinder.clientHealthStatus.txtHolder.setText("Client Health");
         int myHealthStatus = mUser.getHealthStatus()==null?0:mUser.getHealthStatus();
         int clientHealthStatus = determineClientHealthStatus(mUser);
         int familyHealthStatus = mUser.getFamilyHealthStatus()==null?0:mUser.getFamilyHealthStatus();
