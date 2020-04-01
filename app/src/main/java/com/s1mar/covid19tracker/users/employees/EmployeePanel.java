@@ -17,6 +17,8 @@ import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActUserProfileBinding;
+import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
+import com.s1mar.covid19tracker.utils.LoaderUtil;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import com.s1mar.covid19tracker.utils.NetworkUtils;
 import com.s1mar.covid19tracker.utils.PlayerPrefs;
@@ -119,6 +121,15 @@ public class EmployeePanel extends AppCompatActivity {
 
         });
 
+
+        mBinder.clientCard.setOnClickListener(v->{
+            LoaderUtil.loadAct(this, Act_CustomerManagement.class,null);
+        });
+
+        mBinder.feedCard.setOnClickListener(v->{
+
+        });
+        
     }
 
     private void setWorkFromHomeOrNot(boolean onSite){

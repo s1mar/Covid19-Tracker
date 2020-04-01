@@ -172,15 +172,26 @@
             android:hint="Other Places Visted" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.cardview.widget.CardView
-        android:layout_marginTop="20dp"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+       <androidx.cardview.widget.CardView
+           android:id="@+id/client_card"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toStartOf="@id/feed_card"
         android:layout_gravity="center"
         app:cardCornerRadius="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
             android:padding="20dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:minWidth="150dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
                 
@@ -188,20 +199,61 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
-                android:text="Manage Customers"
+                android:gravity="center"
+                android:text="Manage\nCustomers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             
             <ImageView
-                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
                 android:src="@drawable/customers"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginLeft="20dp" />
+                 />
             
         </LinearLayout>
-        
     </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/feed_card"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/client_card"
+            android:layout_gravity="center"
+            app:cardCornerRadius="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:minWidth="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Check\nFeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/feed"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/btn_save_data"
