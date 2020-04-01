@@ -18,7 +18,7 @@ public class MUser implements Parcelable {
     private String placesVisited;
     private String currentLocation;
     private String homeTownAddress;
-    private boolean isClient;
+    private boolean client;
     private List<MUser> clients;
 
     public MUser() {
@@ -129,11 +129,11 @@ public class MUser implements Parcelable {
     }
 
     public boolean isClient() {
-        return isClient;
+        return client;
     }
 
-    public void setClient(boolean client) {
-        isClient = client;
+    public void setIsClient(boolean client) {
+        this.client = client;
     }
 
 
@@ -155,7 +155,7 @@ public class MUser implements Parcelable {
         dest.writeString(this.placesVisited);
         dest.writeString(this.currentLocation);
         dest.writeString(this.homeTownAddress);
-        dest.writeByte(this.isClient ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.client ? (byte) 1 : (byte) 0);
         dest.writeList(this.clients);
     }
 
@@ -171,7 +171,7 @@ public class MUser implements Parcelable {
         this.placesVisited = in.readString();
         this.currentLocation = in.readString();
         this.homeTownAddress = in.readString();
-        this.isClient = in.readByte() != 0;
+        this.client = in.readByte() != 0;
         this.clients = new ArrayList<MUser>();
         in.readList(this.clients, MUser.class.getClassLoader());
     }
