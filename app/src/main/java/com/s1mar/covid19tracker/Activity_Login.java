@@ -12,6 +12,7 @@ import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActLoginBinding;
 import com.s1mar.covid19tracker.users.admin.Activity_AdminHome;
+import com.s1mar.covid19tracker.users.employees.EmployeePanel;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import com.s1mar.covid19tracker.utils.NetworkUtils;
@@ -68,10 +69,11 @@ public class Activity_Login extends AppCompatActivity {
                 if(user.getPassword().equals(pass)){
                         //Proceed;
                     mToaster.showToast("Login Successful",messageDuration);
-                    //TODO: Where the login takes the user
+
                    Class<? extends AppCompatActivity> activityToLoad = null;
                    if(user.isAdmin()){activityToLoad = Activity_AdminHome.class; }
-                   else {//TODO: Make the launchpad for the employee
+                   else {
+                       activityToLoad = EmployeePanel.class;
                    }
                    PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));
 

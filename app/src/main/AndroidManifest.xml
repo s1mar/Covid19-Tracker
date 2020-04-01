@@ -29,13 +29,13 @@
 
         </activity>
         <activity android:name=".Activity_Login" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
-
-        </activity>
-        <activity android:name=".users.employees.EmployeePanel" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".users.employees.EmployeePanel" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
+
         </activity>
     </application>
 
