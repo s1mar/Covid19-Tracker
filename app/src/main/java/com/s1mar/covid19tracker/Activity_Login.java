@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.gson.Gson;
 import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActLoginBinding;
@@ -72,10 +73,7 @@ public class Activity_Login extends AppCompatActivity {
                    if(user.isAdmin()){activityToLoad = Activity_AdminHome.class; }
                    else {//TODO: Make the launchpad for the employee
                    }
-                    PlayerPrefs.setString(this,"username",username);
-                    PlayerPrefs.setString(this,"password",pass);
-                    PlayerPrefs.setBoolean(this,"isAdmin",user.isAdmin());
-                    PlayerPrefs.setBoolean(this,"isClient",user.isClient());
+                   PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));
 
                     LoaderUtil.loadAct(this,activityToLoad,null);
                     //Finish this activity
