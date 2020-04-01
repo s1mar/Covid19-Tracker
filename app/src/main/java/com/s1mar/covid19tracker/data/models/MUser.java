@@ -1,8 +1,12 @@
 package com.s1mar.covid19tracker.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class MUser {
+public class MUser implements Parcelable {
     private String name;
     private String username;
     private String password;
@@ -11,7 +15,7 @@ public class MUser {
     private Integer healthStatus;
     private Integer familyHealthStatus;
     private Integer clientHealthStatus;
-    private List<String> placesVisited;
+    private String placesVisited;
     private String currentLocation;
     private String homeTownAddress;
     private boolean isClient;
@@ -52,11 +56,11 @@ public class MUser {
         this.onSite = onSite;
     }
 
-    public List<String> getPlacesVisited() {
+    public String getPlacesVisited() {
         return placesVisited;
     }
 
-    public void setPlacesVisited(List<String> placesVisited) {
+    public void setPlacesVisited(String placesVisited) {
         this.placesVisited = placesVisited;
     }
 
@@ -133,4 +137,54 @@ public class MUser {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.username);
+        dest.writeString(this.password);
+        dest.writeByte(this.onSite ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.admin ? (byte) 1 : (byte) 0);
+        dest.writeValue(this.healthStatus);
+        dest.writeValue(this.familyHealthStatus);
+        dest.writeValue(this.clientHealthStatus);
+        dest.writeString(this.placesVisited);
+        dest.writeString(this.currentLocation);
+        dest.writeString(this.homeTownAddress);
+        dest.writeByte(this.isClient ? (byte) 1 : (byte) 0);
+        dest.writeList(this.clients);
+    }
+
+    protected MUser(Parcel in) {
+        this.name = in.readString();
+        this.username = in.readString();
+        this.password = in.readString();
+        this.onSite = in.readByte() != 0;
+        this.admin = in.readByte() != 0;
+        this.healthStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.familyHealthStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.clientHealthStatus = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.placesVisited = in.readString();
+        this.currentLocation = in.readString();
+        this.homeTownAddress = in.readString();
+        this.isClient = in.readByte() != 0;
+        this.clients = new ArrayList<MUser>();
+        in.readList(this.clients, MUser.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MUser> CREATOR = new Parcelable.Creator<MUser>() {
+        @Override
+        public MUser createFromParcel(Parcel source) {
+            return new MUser(source);
+        }
+
+        @Override
+        public MUser[] newArray(int size) {
+            return new MUser[size];
+        }
+    };
 }

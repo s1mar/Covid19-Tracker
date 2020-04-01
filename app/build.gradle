@@ -42,6 +42,7 @@ ext {
     LIFECYCLE_VER = "2.2.0"
     MULTIDEX_VER = "2.0.1"
     SPIN_VER = "1.4.0"
+    GSON_VER = "2.8.6"
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -57,4 +58,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.multidex:multidex:$MULTIDEX_VER"
     implementation "com.github.ybq:Android-SpinKit:$SPIN_VER"
+    implementation "com.google.code.gson:gson:$GSON_VER"
 }

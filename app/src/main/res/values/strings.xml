@@ -76,5 +76,7 @@
     <string name="summary_personal_status">Summary Personal Status</string>
     <string name="feed">Feed</string>
     <string name="covid_19_status_tracking_service_thailand">COVID-19 Status Tracking Service Thailand</string>
+    <string name="working_place">Working Place</string>
+    <string name="save">SAVE</string>
 
 </resources>
