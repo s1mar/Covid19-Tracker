@@ -45,7 +45,7 @@ public class LoadingAnimationHelper {
 
     }
 
-    public static void dismissWithDelay(Activity activity, int millisecondsDelay){
+    public static void dismissWithDelay(Activity activity, long millisecondsDelay){
 
         new Handler().postAtTime(()->{
             ActLoaderBinding binder = initiateSplinterSequence(activity);

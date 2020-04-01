@@ -78,5 +78,7 @@
     <string name="covid_19_status_tracking_service_thailand">COVID-19 Status Tracking Service Thailand</string>
     <string name="working_place">Working Place</string>
     <string name="save">SAVE</string>
+    <string name="tick_if_your_client">Tick if your client</string>
+    <string name="clients">Clients</string>
 
 </resources>

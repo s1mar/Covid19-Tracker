@@ -25,7 +25,7 @@ import com.s1mar.covid19tracker.utils.Toaster;
 public class EmployeePanel extends AppCompatActivity {
     final static private String TAG = EmployeePanel.class.getSimpleName();
 
-    private static final int DELAY_SECONDS = 2;
+    private static final long DELAY_SECONDS = 2000L;
     private static final int TOAST_LENGTH = Toast.LENGTH_LONG;
     private ActUserProfileBinding mBinder;
     private MUser mUser;
@@ -107,7 +107,7 @@ public class EmployeePanel extends AppCompatActivity {
 
             LoadingAnimationHelper.showMessage(EmployeePanel.this,"Saving Data..Please be patient");
             FireUsers.updateUser(mUser,actionResult->{
-                LoadingAnimationHelper.dismissWithDelay(EmployeePanel.this,DELAY_SECONDS * 1000);
+                LoadingAnimationHelper.dismissWithDelay(EmployeePanel.this,DELAY_SECONDS);
                 if(actionResult instanceof Boolean && (Boolean) actionResult){
                         mToaster.showToast("Successfully Updated!",TOAST_LENGTH);
                         PlayerPrefs.setString(v.getContext(),"muser",new Gson().toJson(mUser));
