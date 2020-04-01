@@ -71,7 +71,7 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
             binder = ItemCardFeedNewsItemBinding.bind(itemView);
         }
         void updateUI(boolean isAdmin){
-            if(isAdmin){
+            if(!isAdmin){
                 binder.delete.setVisibility(View.GONE);
                 binder.edit.setVisibility(View.GONE);
             }

@@ -87,7 +87,7 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.editTextPlacesVisited.setText(mUser.getPlacesVisited());
 
     }
-    
+
 
     private void hookListeners(){
 
