@@ -87,29 +87,25 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.editTextPlacesVisited.setText(mUser.getPlacesVisited());
 
     }
-
-    private void onHealthImageClick(View imageView){
-        int healthStatus = imageView.getId()==mBinder.myHealthStatus.imgHolder.getId()?myHealthStatus:familyHealthStatus;
-        DialogFragment_HealthSelect.showDialog(this,healthStatus,result -> {
-
-            if(imageView.getId() == mBinder.myHealthStatus.imgHolder.getId()){
-                myHealthStatus = (int)result;
-                setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
-            }
-            else {
-                familyHealthStatus = (int) result;
-                setHealthStatus(mBinder.familyHealthStatus.imgHolder,myHealthStatus);
-            }
-
-
-        });
-
-    }
+    
 
     private void hookListeners(){
 
-        mBinder.myHealthStatus.imgHolder.setOnClickListener(this::onHealthImageClick);
-        mBinder.familyHealthStatus.imgHolder.setOnClickListener(this::onHealthImageClick);
+        mBinder.myHealthStatus.imgHolder.setOnClickListener(v->{
+
+            DialogFragment_HealthSelect.showDialog(this,myHealthStatus,result -> {
+                myHealthStatus = (int) result;
+                setHealthStatus(mBinder.myHealthStatus.imgHolder, myHealthStatus);
+            });
+
+
+        });
+        mBinder.familyHealthStatus.imgHolder.setOnClickListener(v->{
+            DialogFragment_HealthSelect.showDialog(this,familyHealthStatus,result -> {
+                familyHealthStatus = (int) result;
+                setHealthStatus(mBinder.familyHealthStatus.imgHolder, familyHealthStatus);
+            });
+        });
         mBinder.clientHealthStatus.imgHolder.setOnClickListener(v -> {
             mToaster.showToast("Client Health can not be set from here, please use the client management screen",TOAST_LENGTH);
         });

@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup
+    android:gravity="center_vertical"
     android:id="@+id/radio_manager"
     android:orientation="vertical"
-    android:padding="50dp"
+    android:padding="30dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RadioButton
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         android:id="@+id/normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/normal_circle"
         android:drawableLeft="@drawable/normal_circle"
         android:text="      Normal"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <RadioButton
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         android:id="@+id/observation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/observ_circle"
         android:drawableLeft="@drawable/observ_circle"
-        android:text="      Under Observation"
-        android:textSize="20sp"
+        android:text="      Suspicious"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <RadioButton
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         android:id="@+id/infected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/infect_circle"
         android:drawableLeft="@drawable/infect_circle"
         android:text="      Infected"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
 </RadioGroup>
