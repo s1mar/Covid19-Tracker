@@ -7,13 +7,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.Constants;
 import com.s1mar.covid19tracker.data.FireFeed;
 import com.s1mar.covid19tracker.data.models.MFeedItem;
+import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActivityFeedNewsBinding;
 import com.s1mar.covid19tracker.users.auxiliary.RecyclerAdapter_FeedNews;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
+import com.s1mar.covid19tracker.utils.PlayerPrefs;
 import com.s1mar.covid19tracker.utils.Toaster;
 
 import java.util.List;
@@ -24,18 +27,26 @@ public class Activity_FeedNews extends AppCompatActivity {
 
     private RecyclerAdapter_FeedNews mAdapter;
     private Toaster mToaster;
+    private boolean isAdmin = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityFeedNewsBinding binder = ActivityFeedNewsBinding.inflate(getLayoutInflater());
         mToaster = new Toaster(this);
+        isAdmin = determineIsAdmin();
         initActionsAndAdapter(binder);
         initListeners(binder);
         setContentView(binder.getRoot());
     }
 
+    private boolean determineIsAdmin(){
+        MUser user = new Gson().fromJson(PlayerPrefs.getString(Activity_FeedNews.this,"muser"),MUser.class);
+        return user.isAdmin();
+    }
+
     private void initActionsAndAdapter(ActivityFeedNewsBinding binder){
-        mAdapter = new RecyclerAdapter_FeedNews(feedItem->{
+        mAdapter = new RecyclerAdapter_FeedNews(isAdmin,feedItem->{
            //delete action
             FireFeed.deleteItem((MFeedItem) feedItem,result->{
                 String msg = getString(R.string.delete_feed_succ);

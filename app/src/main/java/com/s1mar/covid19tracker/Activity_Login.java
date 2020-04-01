@@ -72,7 +72,7 @@ public class Activity_Login extends AppCompatActivity {
 
                    Class<? extends AppCompatActivity> activityToLoad = null;
                    if(user.isAdmin()){activityToLoad = Activity_AdminHome.class; }
-                   else {
+                   else if(!user.isClient()) {
                        activityToLoad = EmployeePanel.class;
                    }
                    PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));

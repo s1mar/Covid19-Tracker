@@ -129,7 +129,7 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.feedCard.setOnClickListener(v->{
 
         });
-        
+
     }
 
     private void setWorkFromHomeOrNot(boolean onSite){

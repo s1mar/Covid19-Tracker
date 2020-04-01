@@ -21,10 +21,12 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
 
     private IAction deleteAction;
     private IAction updateAction;
+    private boolean isAdmin;
 
-    public RecyclerAdapter_FeedNews(IAction deleteAction, IAction updateAction){
+    public RecyclerAdapter_FeedNews(boolean isAdmin,IAction deleteAction, IAction updateAction){
             this.deleteAction = deleteAction;
             this.updateAction = updateAction;
+            this.isAdmin = isAdmin;
     }
 
     public void updateDataSet(List<MFeedItem> dataSet,boolean isReset){
@@ -40,8 +42,9 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_card_feed_news_item,parent,false);
-        return new ViewHolder(itemView);
-
+        ViewHolder holder = new ViewHolder(itemView);
+        holder.updateUI(isAdmin);
+        return holder;
     }
 
     @Override
@@ -50,8 +53,10 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
             holder.binder.subjectTitle.setText(feedItem.getSubject());
             holder.binder.contentText.setText(feedItem.getDesc());
             holder.binder.timeStamp.setText(feedItem.getTime().toString());
-            holder.binder.delete.setOnClickListener(v->deleteAction.onResult(feedItem));
-            holder.binder.edit.setOnClickListener(v->updateAction.onResult(feedItem));
+            if(isAdmin) {
+                holder.binder.delete.setOnClickListener(v -> deleteAction.onResult(feedItem));
+                holder.binder.edit.setOnClickListener(v -> updateAction.onResult(feedItem));
+            }
     }
 
     @Override
@@ -64,7 +69,16 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             binder = ItemCardFeedNewsItemBinding.bind(itemView);
-
+        }
+        void updateUI(boolean isAdmin){
+            if(isAdmin){
+                binder.delete.setVisibility(View.GONE);
+                binder.edit.setVisibility(View.GONE);
+            }
+            else{
+                binder.delete.setVisibility(View.VISIBLE);
+                binder.edit.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
