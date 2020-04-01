@@ -76,7 +76,7 @@ public class Activity_AddEmp extends AppCompatActivity {
         if(checkedRadioId == binder.radioManager.getId()){
             userToBeAdded.setAdmin(true);
         }else if(checkedRadioId == binder.radioCustomer.getId()){
-            userToBeAdded.setClient(true);
+            userToBeAdded.setIsClient(true);
         }
 
 
