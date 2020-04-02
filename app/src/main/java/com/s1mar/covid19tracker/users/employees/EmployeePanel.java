@@ -38,7 +38,6 @@ public class EmployeePanel extends AppCompatActivity {
     private MUser mUser;
 
     int myHealthStatus;
-    int clientHealthStatus;
     int familyHealthStatus;
 
     private Toaster mToaster;
@@ -76,14 +75,14 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.clientHealthStatus.txtHolder.setText("Client Health");
 
         myHealthStatus = mUser.getHealthStatus()==null?0:mUser.getHealthStatus();
-        clientHealthStatus = determineClientHealthStatus(mUser,result -> {
-            setHealthStatus(mBinder.clientHealthStatus.imgHolder,clientHealthStatus);
-        });
+
         familyHealthStatus = mUser.getFamilyHealthStatus()==null?0:mUser.getFamilyHealthStatus();
 
         setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
         setHealthStatus(mBinder.familyHealthStatus.imgHolder,familyHealthStatus);
-        setHealthStatus(mBinder.clientHealthStatus.imgHolder,clientHealthStatus);
+        determineAndSetClientHealthStatus(mUser,result -> {
+            setHealthStatus(mBinder.clientHealthStatus.imgHolder,(Integer)result);
+        });
 
         //set Location data
         mBinder.edtCurrentPlace.getEditText().setText(mUser.getCurrentLocation());
@@ -202,10 +201,8 @@ public class EmployeePanel extends AppCompatActivity {
     }
 
 
-    private Integer determineClientHealthStatus(MUser user, IAction action){
+    private void determineAndSetClientHealthStatus(MUser user, IAction action){
         new TaskClientHealth(user,action).execute();
-        return 0; //Sync returns assumed health as healthy but, also runs a background async call to verify and update
-
     }
 
 

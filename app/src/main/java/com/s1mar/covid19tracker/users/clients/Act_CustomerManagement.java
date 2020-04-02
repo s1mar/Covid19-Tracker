@@ -107,6 +107,9 @@ public class Act_CustomerManagement extends AppCompatActivity {
               while (iterator.hasNext()){
 
                   Map.Entry<String ,Integer> entry = iterator.next();
+
+                  if(entry.getValue()==null){continue;} //Since the value wasn't changed, I won't update it
+
                   String username = entry.getKey().split(";")[0];
                   FirebaseFirestore.getInstance().collection(Constants.USERS)
                           .whereEqualTo("username",username).get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -125,6 +128,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
 
     }
+
 
     private void initialization(){
 
@@ -281,7 +285,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
                 for(MUser user:Map_IsCheckedAsClient.keySet()){
                     String key = user.getUsername()+";"+user.getName();
-                    Integer healthValue = Map_ClientHealth.get(user)!=null?Map_ClientHealth.get(user):0;
+                    Integer healthValue = Map_ClientHealth.get(user);  //If this sends NUll value, that means the state of that client wasn't changed
                     clientAndHealthDataMap.put(key,healthValue);
                 }
             }
