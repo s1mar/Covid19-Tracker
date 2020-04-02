@@ -80,6 +80,15 @@ public class Act_CustomerManagement extends AppCompatActivity {
         if(configValue==1){
             mBinder.headerText.setText(R.string.engineer);
             mBinder.saveBtn.setVisibility(View.GONE);
+
+            try{
+
+                mUser = getIntent().getParcelableExtra("parcel");
+            }catch (Exception ex){
+                Log.e(TAG, "onCreate: ", ex);
+            }
+
+
             initializationCLient();
         }else {
             initialization();
