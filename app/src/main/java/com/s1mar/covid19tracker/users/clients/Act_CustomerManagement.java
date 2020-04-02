@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.s1mar.covid19tracker.R;
@@ -38,6 +39,7 @@ import com.s1mar.covid19tracker.utils.PlayerPrefs;
 import com.s1mar.covid19tracker.utils.TextUtils;
 import com.s1mar.covid19tracker.utils.Toaster;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
         mBinder.recyclerView.setAdapter(mAdapter);
 
         if(configValue==1){
+            mBinder.headerText.setText(R.string.engineer);
             mBinder.saveBtn.setVisibility(View.GONE);
             initializationCLient();
         }else {
@@ -175,24 +178,29 @@ public class Act_CustomerManagement extends AppCompatActivity {
         }
 
          FirebaseFirestore db = FirebaseFirestore.getInstance();
-         List<Task> tasks = new ArrayList<>(0);
+        Collection<Task<QuerySnapshot>> tasks  = new ArrayList<>(0);
          for(String username : mUser.getEmployeesAssigned()){
-                tasks.add(db.collection(Constants.USERS).whereEqualTo("username",username).get());
+              tasks.add(db.collection(Constants.USERS).whereEqualTo("username",username).get());
          }
 
          LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Initializing...");
-         Tasks.whenAllSuccess((Task<?>) tasks).addOnSuccessListener(listUsers->{
-            LoadingAnimationHelper.dismiss(Act_CustomerManagement.this);
+
+         Tasks.whenAllSuccess(tasks).addOnSuccessListener(listUsers->{
+
+             LoadingAnimationHelper.dismiss(Act_CustomerManagement.this);
             if(listUsers==null || listUsers.isEmpty()){
                 LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"No Employees Assigned");
             }    else{
 
-              List<MUser> dataSet = Stream.of(listUsers).map(new Function<Object, MUser>() {
+                List<MUser> dataSet = Stream.of(listUsers).map(new Function<Object, MUser>() {
                     @Override
                     public MUser apply(Object o) {
-                        return (MUser)o;
+                       QuerySnapshot qs =  (QuerySnapshot)o;
+                       return qs.getDocuments().get(0).toObject(MUser.class);
+
                     }
                 }).toList();
+
 
             mAdapter.updateDataSet(dataSet);
             }
@@ -312,6 +320,9 @@ public class Act_CustomerManagement extends AppCompatActivity {
                    holder.binder.red.setChecked(true);
                }
 
+               holder.binder.red.setEnabled(false);
+               holder.binder.green.setEnabled(false);
+               holder.binder.yellow.setEnabled(false);
                holder.binder.healthStatusContainer.setActivated(false);
                holder.binder.healthStatusContainer.setEnabled(false);
 
