@@ -4,15 +4,11 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.google.gson.Gson;
 import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.FireUsers;
@@ -80,9 +76,7 @@ public class EmployeePanel extends AppCompatActivity {
 
         setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
         setHealthStatus(mBinder.familyHealthStatus.imgHolder,familyHealthStatus);
-        determineAndSetClientHealthStatus(mUser,result -> {
-            setHealthStatus(mBinder.clientHealthStatus.imgHolder,(Integer)result);
-        });
+
 
         //set Location data
         mBinder.edtCurrentPlace.getEditText().setText(mUser.getCurrentLocation());
@@ -91,6 +85,13 @@ public class EmployeePanel extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        determineAndSetClientHealthStatus(mUser,result -> {
+            setHealthStatus(mBinder.clientHealthStatus.imgHolder,(Integer)result);
+        });
+    }
 
     private void hookListeners(){
 
@@ -202,7 +203,7 @@ public class EmployeePanel extends AppCompatActivity {
 
 
     private void determineAndSetClientHealthStatus(MUser user, IAction action){
-        new TaskClientHealth(user,action).execute();
+        new TaskClientHealth(EmployeePanel.this,user,action).execute();
     }
 
 

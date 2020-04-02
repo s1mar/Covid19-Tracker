@@ -7,12 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
+
     <LinearLayout
         android:weightSum="2"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_weight="1.7"
         android:padding="20dp"
         android:layout_width="0dp"
@@ -64,12 +66,34 @@
             tools:text="Client Health: Normal" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:layout_gravity="center"
+
+        <LinearLayout
             android:layout_weight="0.3"
-            tools:src="@drawable/home_48dp"
-            android:id="@+id/workSite"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-    </LinearLayout>
+            android:weightSum="1"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:padding="10dp"
+                android:layout_gravity="end"
+                android:layout_weight="0.2"
+                android:id="@+id/delete"
+                android:src="@drawable/rubbish"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+
+            <ImageView
+                android:layout_weight="0.7"
+                android:layout_gravity="center"
+                tools:src="@drawable/home_48dp"
+                android:id="@+id/workSite"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        </LinearLayout>
+
+
+      </LinearLayout>
+
 </androidx.cardview.widget.CardView>

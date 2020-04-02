@@ -1,25 +1,26 @@
 package com.s1mar.covid19tracker.users.auxiliary;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.s1mar.covid19tracker.R;
-
-import com.s1mar.covid19tracker.data.Constants;
+import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.data.models.TaskClientHealth;
 import com.s1mar.covid19tracker.databinding.ItemCardEmpStatusBinding;
+import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
+import com.s1mar.covid19tracker.utils.Toaster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +29,11 @@ import java.util.List;
 
 public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapter_Employee.ViewHolder> {
 
+    final static private String TAG = RecyclerAdapter_Employee.class.getSimpleName();
     private List<MUser> mDataSet = new ArrayList<MUser>(0);
     private HashMap<MUser,Integer> clientHealthStatusMap = new HashMap<>(0);
+
+    private Toast mToast;
 
     @NonNull
     @Override
@@ -62,6 +66,31 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         bindClientHealthStatus(holder,employee);
         //bind emp location
         bindLocationData(holder,employee);
+
+
+        holder.binder.delete.setOnClickListener(v->{
+            LoadingAnimationHelper.showMessage((Activity) v.getContext(),"Deleting..");
+            FireUsers.deleteUser(employee.getUsername(),result -> {
+            LoadingAnimationHelper.dismissWithDelay((Activity) v.getContext(),2000L);
+                try {
+                    if ((Boolean) result) {
+                        if (mToast != null) {
+                            mToast.cancel();
+                        }
+                        mToast = new Toast(holder.itemView.getContext());
+                        mToast.setText("User Successfully Deleted");
+                        notifyDataSetChanged();
+
+                    } else {
+                        mToast = new Toast(holder.itemView.getContext());
+                        mToast.setText("Couldn't delete user");
+                    }
+                }catch (Exception ex){
+                    Log.e(TAG, "onBindViewHolder: ",ex);
+                }
+            });
+        });
+
     }
 
 
@@ -132,7 +161,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
             }
             else{
                 //We'll query the database and update data
-               new TaskClientHealth(employee,result -> {
+               new TaskClientHealth(holder.itemView.getContext(),employee,result -> {
                    clientHealthStatusMap.put(employee,(Integer)result);
                    bindClientHealthStatus_Tres(holder,(Integer)result);
                }).execute();
@@ -168,6 +197,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
    static class ViewHolder extends RecyclerView.ViewHolder{
         ItemCardEmpStatusBinding binder;
+        private Toaster mToaster;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             binder = ItemCardEmpStatusBinding.bind(itemView);

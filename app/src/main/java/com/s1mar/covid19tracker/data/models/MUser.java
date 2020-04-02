@@ -3,7 +3,6 @@ package com.s1mar.covid19tracker.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MUser implements Parcelable {
@@ -20,6 +19,7 @@ public class MUser implements Parcelable {
     private String homeTownAddress;
     private boolean client;
     private List<String> clients;
+    private boolean notDeletable;
 
     public MUser() {
 
@@ -121,6 +121,14 @@ public class MUser implements Parcelable {
         this.familyHealthStatus = familyHealthStatus;
     }
 
+    public boolean isNotDeletable() {
+        return notDeletable;
+    }
+
+    public void setNotDeletable(boolean notDeletable) {
+        this.notDeletable = notDeletable;
+    }
+
     public Integer getClientHealthStatus() {
         return clientHealthStatus;
     }
@@ -158,6 +166,7 @@ public class MUser implements Parcelable {
         dest.writeString(this.homeTownAddress);
         dest.writeByte(this.client ? (byte) 1 : (byte) 0);
         dest.writeStringList(this.clients);
+        dest.writeByte(this.notDeletable ? (byte) 1 : (byte) 0);
     }
 
     protected MUser(Parcel in) {
@@ -174,6 +183,7 @@ public class MUser implements Parcelable {
         this.homeTownAddress = in.readString();
         this.client = in.readByte() != 0;
         this.clients = in.createStringArrayList();
+        this.notDeletable = in.readByte() != 0;
     }
 
     public static final Creator<MUser> CREATOR = new Creator<MUser>() {
@@ -187,4 +197,8 @@ public class MUser implements Parcelable {
             return new MUser[size];
         }
     };
+
+    public boolean removeClient(String clientKey){
+        return clients.contains(clientKey) && clients.remove(clientKey);
+    }
 }
