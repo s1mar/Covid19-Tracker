@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Act_CustomerManagement extends AppCompatActivity {
@@ -207,7 +208,8 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"No Employees Assigned");
             }    else{
 
-                List<MUser> dataSet = Stream.of(listUsers).map(new Function<Object, MUser>() {
+
+              List<MUser> dataSet = Stream.of(listUsers).map(new Function<Object, MUser>() {
                     @Override
                     public MUser apply(Object o) {
                        QuerySnapshot qs =  (QuerySnapshot)o;
@@ -215,6 +217,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
                     }
                 }).toList();
+
 
 
             mAdapter.updateDataSet(dataSet);
@@ -317,7 +320,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
            if(configValue==1){
 
-               MUser emp = clients.get(0);
+               MUser emp = clients.get(position);
                holder.binder.checkMyClient.setChecked(true);
                holder.binder.checkMyClient.setEnabled(false);
                holder.binder.txtName.setText(emp.getName());
