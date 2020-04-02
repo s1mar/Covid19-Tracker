@@ -43,6 +43,13 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         this.onClickEmp = onClickEmp;
     }
 
+
+    private  int filterView = 0; // 0->all, 1->Manager, 2->Employee,3-> Customer
+
+    public void setFilterView(int filterView) {
+        this.filterView = filterView;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -104,6 +111,16 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
             });
         });
 
+        if(filterView==3){
+            holder.binder.familyStatus.setVisibility(View.GONE);
+            holder.binder.clientStatus.setVisibility(View.GONE);
+            holder.binder.workSite.setVisibility(View.GONE);
+        }
+        else{
+            holder.binder.familyStatus.setVisibility(View.VISIBLE);
+            holder.binder.clientStatus.setVisibility(View.VISIBLE);
+            holder.binder.workSite.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showToast(Context context, String msg){
