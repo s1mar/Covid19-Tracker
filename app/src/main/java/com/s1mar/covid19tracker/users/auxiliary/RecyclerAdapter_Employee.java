@@ -1,6 +1,7 @@
 package com.s1mar.covid19tracker.users.auxiliary;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -69,21 +70,22 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
 
         holder.binder.delete.setOnClickListener(v->{
+            if(employee.isNotDeletable()){
+                showToast(holder.itemView.getContext(),"User Can't be Deleted");
+                return;
+            }
+
             LoadingAnimationHelper.showMessage((Activity) v.getContext(),"Deleting..");
             FireUsers.deleteUser(employee.getUsername(),result -> {
             LoadingAnimationHelper.dismissWithDelay((Activity) v.getContext(),2000L);
                 try {
                     if ((Boolean) result) {
-                        if (mToast != null) {
-                            mToast.cancel();
-                        }
-                        mToast = new Toast(holder.itemView.getContext());
-                        mToast.setText("User Successfully Deleted");
+                        showToast(holder.itemView.getContext(),"User Successfully Deleted");
                         notifyDataSetChanged();
 
                     } else {
-                        mToast = new Toast(holder.itemView.getContext());
-                        mToast.setText("Couldn't delete user");
+                      showToast(holder.itemView.getContext(),"Couldn't delete user");
+
                     }
                 }catch (Exception ex){
                     Log.e(TAG, "onBindViewHolder: ",ex);
@@ -93,6 +95,13 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
     }
 
+    private void showToast(Context context, String msg){
+        if (mToast != null) {
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(context,msg,Toast.LENGTH_SHORT);
+        mToast.show();
+    }
 
     private void bindLocationData(ViewHolder holder,MUser employee){
         if (employee.isOnSite()){
