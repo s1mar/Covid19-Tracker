@@ -435,7 +435,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 }
                 else{
                    Map_IsCheckedAsClient.put(client,false);
-                   Map_ClientHealth.remove(client); //Since it's a not client hence the privilege to change health data is also gone
+                   Map_ClientHealth.remove(client);//Since it's a not client hence the privilege to change health data is also gone
                    holder.enableChangeHealthStatusView(false);
                 }
             });
