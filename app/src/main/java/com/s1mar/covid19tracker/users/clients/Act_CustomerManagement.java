@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Function;
+import com.annimon.stream.function.Predicate;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -103,21 +106,42 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
 
                 //Now,let's update the clientele health data
-              Iterator<Map.Entry<String,Integer>> iterator = clientAndHealthDict.entrySet().iterator();
-              while (iterator.hasNext()){
+                for (Map.Entry<String, Integer> entry : clientAndHealthDict.entrySet()) {
 
-                  Map.Entry<String ,Integer> entry = iterator.next();
+                    if (entry.getValue() == null) {
+                        continue;
+                    } //Since the value wasn't changed, I won't update it
 
-                  if(entry.getValue()==null){continue;} //Since the value wasn't changed, I won't update it
+                    String username = entry.getKey().split(";")[0];
+                    FirebaseFirestore.getInstance().collection(Constants.USERS)
+                            .whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                        MUser userClient = queryDocumentSnapshots.getDocuments().get(0).toObject(MUser.class);
+                        userClient.setHealthStatus(entry.getValue());
 
-                  String username = entry.getKey().split(";")[0];
-                  FirebaseFirestore.getInstance().collection(Constants.USERS)
-                          .whereEqualTo("username",username).get().addOnSuccessListener(queryDocumentSnapshots -> {
-                              DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
-                              FirebaseFirestore.getInstance()
-                                      .document(documentReference.getPath()).update("healthStatus",entry.getValue());
-                          });
-              }
+                        /*FirebaseFirestore.getInstance()
+                                .document(documentReference.getPath()).update("healthStatus", entry.getValue());*/
+
+                        userClient.addToAssignedEmployees(mUser.getUsername());
+
+                        //Associate the client with its assigned employee
+                        //FirebaseFirestore.getInstance().document(documentReference.getPath()).update("")
+                        FirebaseFirestore.getInstance().document(documentReference.getPath()).set(userClient);
+
+                            //TODO I've added the id func to the data model, these calls can now be reduced and optimized
+                        //Unassociate all clients that are no longer associated with this employee
+                        for(MUser userClientX : mAdapter.clientsThatNoLongerBelongToThisEmployee()){
+
+                               FirebaseFirestore.getInstance().collection(Constants.USERS).
+                                       whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshotsTwo -> {
+                                   DocumentReference documentReferenceTwo = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                                   userClientX.removeFromAssignedEmployee(mUser.getUsername());
+                                   FirebaseFirestore.getInstance().document(documentReferenceTwo.getPath()).set(userClientX);
+                               });
+                        }
+
+                            });
+                }
 
             }
             else {
@@ -250,7 +274,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                     holder.enableChangeHealthStatusView(true);
                 }
                 else{
-                   Map_IsCheckedAsClient.remove(client);
+                   Map_IsCheckedAsClient.put(client,false);
                    Map_ClientHealth.remove(client); //Since it's a not client hence the privilege to change health data is also gone
                    holder.enableChangeHealthStatusView(false);
                 }
@@ -283,7 +307,21 @@ public class Act_CustomerManagement extends AppCompatActivity {
             HashMap<String,Integer> clientAndHealthDataMap = new HashMap<>(0);
             if(Map_IsCheckedAsClient!=null && !Map_IsCheckedAsClient.isEmpty()){
 
-                for(MUser user:Map_IsCheckedAsClient.keySet()){
+                List<MUser> relevantUsers = Stream.of(Map_IsCheckedAsClient).filter(new Predicate<Map.Entry<MUser, Boolean>>() {
+                    @Override
+                    public boolean test(Map.Entry<MUser, Boolean> value) {
+                        return value.getValue();
+                    }
+                }).map(new Function<Map.Entry<MUser, Boolean>, MUser>() {
+
+                    @Override
+                    public MUser apply(Map.Entry<MUser, Boolean> mUserBooleanEntry) {
+                        return mUserBooleanEntry.getKey();
+                    }
+                }).toList();
+
+
+                for(MUser user:relevantUsers){
                     String key = user.getUsername()+";"+user.getName();
                     Integer healthValue = Map_ClientHealth.get(user);  //If this sends NUll value, that means the state of that client wasn't changed
                     clientAndHealthDataMap.put(key,healthValue);
@@ -291,6 +329,22 @@ public class Act_CustomerManagement extends AppCompatActivity {
             }
 
             return clientAndHealthDataMap;
+        }
+
+        List<MUser> clientsThatNoLongerBelongToThisEmployee(){
+            return Stream.of(Map_IsCheckedAsClient).filter(new Predicate<Map.Entry<MUser, Boolean>>() {
+                @Override
+                public boolean test(Map.Entry<MUser, Boolean> value) {
+                    return !value.getValue();
+                }
+            }).map(new Function<Map.Entry<MUser, Boolean>, MUser>() {
+
+                @Override
+                public MUser apply(Map.Entry<MUser, Boolean> mUserBooleanEntry) {
+                    return mUserBooleanEntry.getKey();
+                }
+            }).toList();
+
         }
 
         @Override

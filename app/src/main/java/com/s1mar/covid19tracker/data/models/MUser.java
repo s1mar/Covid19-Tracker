@@ -3,9 +3,14 @@ package com.s1mar.covid19tracker.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.firestore.DocumentId;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MUser implements Parcelable {
+    @DocumentId
+    private String id;
     private String name;
     private String username;
     private String password;
@@ -19,10 +24,23 @@ public class MUser implements Parcelable {
     private String homeTownAddress;
     private boolean client;
     private List<String> clients;
+    private List<String> employeesAssigned;
     private boolean notDeletable;
 
     public MUser() {
 
+    }
+
+    public boolean removeFromAssignedEmployee(String username){
+
+        return employeesAssigned!=null && employeesAssigned.remove(username);
+
+    }
+    public void addToAssignedEmployees(String username){
+        if(employeesAssigned==null){employeesAssigned = new ArrayList<>(0);
+        }
+        if(!employeesAssigned.contains(username))
+            employeesAssigned.add(username);
     }
 
     public MUser(String name, String username, String password) {
@@ -146,6 +164,27 @@ public class MUser implements Parcelable {
     }
 
 
+    public boolean removeClient(String clientKey){
+        return clients.contains(clientKey) && clients.remove(clientKey);
+    }
+
+    public List<String> getEmployeesAssigned() {
+        return employeesAssigned;
+    }
+
+    public void setEmployeesAssigned(List<String> employeesAssigned) {
+        this.employeesAssigned = employeesAssigned;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -153,6 +192,7 @@ public class MUser implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.username);
         dest.writeString(this.password);
@@ -166,10 +206,12 @@ public class MUser implements Parcelable {
         dest.writeString(this.homeTownAddress);
         dest.writeByte(this.client ? (byte) 1 : (byte) 0);
         dest.writeStringList(this.clients);
+        dest.writeStringList(this.employeesAssigned);
         dest.writeByte(this.notDeletable ? (byte) 1 : (byte) 0);
     }
 
     protected MUser(Parcel in) {
+        this.id = in.readString();
         this.name = in.readString();
         this.username = in.readString();
         this.password = in.readString();
@@ -183,6 +225,7 @@ public class MUser implements Parcelable {
         this.homeTownAddress = in.readString();
         this.client = in.readByte() != 0;
         this.clients = in.createStringArrayList();
+        this.employeesAssigned = in.createStringArrayList();
         this.notDeletable = in.readByte() != 0;
     }
 
@@ -197,8 +240,4 @@ public class MUser implements Parcelable {
             return new MUser[size];
         }
     };
-
-    public boolean removeClient(String clientKey){
-        return clients.contains(clientKey) && clients.remove(clientKey);
-    }
 }
