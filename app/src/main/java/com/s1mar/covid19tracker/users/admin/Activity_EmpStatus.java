@@ -42,17 +42,25 @@ public class Activity_EmpStatus extends AppCompatActivity {
         binder.rgOptions.setOnCheckedChangeListener((group, checkedId) -> {
             List<MUser> dataSetToPopulate = fullDataSet;
             switch (checkedId){
+                case R.id.rb_All:
+                    dataSetToPopulate = fullDataSet;
+                    mAdapter.setFilterView(0);
+                    break;
+
 
                 case R.id.rb_Managers:
                     dataSetToPopulate = managers;
+                    mAdapter.setFilterView(1);
                     break;
 
                 case R.id.rb_Employees:
                     dataSetToPopulate = employees;
+                    mAdapter.setFilterView(2);
                     break;
 
                 case R.id.rb_Customers:
                     dataSetToPopulate = customers;
+                    mAdapter.setFilterView(3);
                     break;
             }
             mAdapter.updateSet(dataSetToPopulate,true);
@@ -101,6 +109,7 @@ public class Activity_EmpStatus extends AppCompatActivity {
     }
 
     private void onClick_launchDetails(MUser user){
+        if(user.isAdmin()){return;}
         Intent launchIntent = new Intent(this, EmployeePanel.class);
         launchIntent.putExtra("config",2);
         launchIntent.putExtra("parcel",user);

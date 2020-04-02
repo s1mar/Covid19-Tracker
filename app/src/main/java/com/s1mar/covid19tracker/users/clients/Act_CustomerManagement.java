@@ -1,9 +1,15 @@
 package com.s1mar.covid19tracker.users.clients;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -306,8 +312,12 @@ public class Act_CustomerManagement extends AppCompatActivity {
                holder.binder.checkMyClient.setChecked(true);
                holder.binder.checkMyClient.setEnabled(false);
                holder.binder.txtName.setText(emp.getName());
+
+               //String location = TextUtils.isStringEmpty(emp.getCurrentLocation())?holder.itemView.getContext().getString(R.string.location_not_provided):emp.getCurrentLocation();
+               //holder.binder.txtLocName.setText(location);
+
                String location = TextUtils.isStringEmpty(emp.getCurrentLocation())?holder.itemView.getContext().getString(R.string.location_not_provided):emp.getCurrentLocation();
-               holder.binder.txtLocName.setText(location);
+               location= "Location: "+ location +"\n";
 
                int healthStatus = emp.getHealthStatus()==null?0:emp.getHealthStatus();
                if(healthStatus==0){
@@ -320,12 +330,63 @@ public class Act_CustomerManagement extends AppCompatActivity {
                    holder.binder.red.setChecked(true);
                }
 
+               String onSite = emp.isOnSite()?"On-site":"Home";
+               onSite =  "Working-From: "+onSite;
+
+               String personalHealthStatus = "Normal";
+
+
+               int colorHealthStatus = Color.GREEN;
+               if(emp.getHealthStatus()!=null){
+                   if(emp.getHealthStatus()==1){
+                       personalHealthStatus = "Observation";
+                       colorHealthStatus = Color.YELLOW;
+                   }else if(emp.getHealthStatus() == 2){
+                        personalHealthStatus = "Infected";
+                        colorHealthStatus = Color.RED;
+                   }
+               }
+               personalHealthStatus = "Personal Health "+personalHealthStatus+"\n";
+
+
+               int colorFamilyStatus = Color.GREEN;
+               String familyHealthStatus = "Normal";
+
+               if(emp.getFamilyHealthStatus()!=null){
+                   if(emp.getFamilyHealthStatus()==1){
+                       familyHealthStatus = "Observation";
+                       colorFamilyStatus = Color.YELLOW;
+                   }else if(emp.getFamilyHealthStatus() == 2){
+                       familyHealthStatus = "Infected";
+                       colorFamilyStatus = Color.RED;
+                   }
+               }
+               familyHealthStatus="Family Health "+familyHealthStatus+"\n";
+
+               Spannable personalHealth = new SpannableString(personalHealthStatus);
+               personalHealth.setSpan(new ForegroundColorSpan(colorHealthStatus),15,personalHealth.length()
+                       , Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+               Spannable familyHealth = new SpannableString(familyHealthStatus);
+               familyHealth.setSpan(new ForegroundColorSpan(colorFamilyStatus),15,familyHealth.length()
+                       , Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+              ;
+               //Spannable span = new SpannableString(healthFinal);
+               //span.setSpan(new ForegroundColorSpan(color), health.length(), healthFinal.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+               //String str = personalHealthStatus+"\n"+familyHealthStatus+"\n"+onSite;
+               holder.binder.txtLocName.setText( android.text.TextUtils.concat(location,personalHealth,familyHealth,onSite));
+               holder.binder.txtLocName.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+               holder.binder.txtLocName.setMaxLines(5);
+               holder.binder.txtLocName.setMaxEms(12);
+               holder.binder.healthStatusContainer.setVisibility(View.GONE);
                holder.binder.red.setEnabled(false);
                holder.binder.green.setEnabled(false);
                holder.binder.yellow.setEnabled(false);
                holder.binder.healthStatusContainer.setActivated(false);
                holder.binder.healthStatusContainer.setEnabled(false);
 
+               holder.binder.tickLabel.setVisibility(View.GONE);
 
                return;
            }
