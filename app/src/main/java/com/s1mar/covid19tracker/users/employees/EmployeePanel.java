@@ -1,10 +1,16 @@
 package com.s1mar.covid19tracker.users.employees;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +30,9 @@ import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import com.s1mar.covid19tracker.utils.NetworkUtils;
 import com.s1mar.covid19tracker.utils.PlayerPrefs;
 import com.s1mar.covid19tracker.utils.Toaster;
+import com.s1mar.covid19tracker.utils.Utils;
+
+import java.util.List;
 
 public class EmployeePanel extends AppCompatActivity {
     final static private String TAG = EmployeePanel.class.getSimpleName();
@@ -37,19 +46,57 @@ public class EmployeePanel extends AppCompatActivity {
     int familyHealthStatus;
 
     private Toaster mToaster;
+
+    private int configValue;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinder = ActUserProfileBinding.inflate(getLayoutInflater());
         setContentView(mBinder.getRoot());
-        initialization();
+        processParcel();
         hookListeners();
+
+        if(configValue>1){
+            //Admin access; make it all read-only
+            setUiConfigReadOnly();
+            mBinder.btnSaveData.setVisibility(View.GONE);
+            mBinder.clientCard.setVisibility(View.GONE);
+            mBinder.feedCard.setVisibility(View.GONE);
+        }
+    }
+
+
+    //config means
+    //0->self
+    //2->admin
+    //1->customer
+    private void processParcel(){
+
+        try{
+            Intent intent = getIntent();
+            if(intent == null || intent.getIntExtra("config",0) == 0
+                    || intent.getParcelableExtra("parcel") == null){
+
+                mUser = new Gson().fromJson(PlayerPrefs.getString(EmployeePanel.this,"muser"),MUser.class);
+
+            }
+            else{
+                    configValue = intent.getIntExtra("config",0);
+                    mUser = intent.getParcelableExtra("parcel");
+
+            }
+
+            initialization();
+
+        }catch (Exception ex){
+            Log.e(TAG, "processParcel: ",ex);
+        }
     }
 
     void initialization(){
         try {
+
             mToaster = new Toaster(this);
-            mUser = new Gson().fromJson(PlayerPrefs.getString(EmployeePanel.this,"muser"),MUser.class);
             initUI();
 
         }catch (Exception ex){
@@ -83,6 +130,30 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.edtHometown.getEditText().setText(mUser.getHomeTownAddress());
         mBinder.editTextPlacesVisited.setText(mUser.getPlacesVisited());
 
+
+    }
+
+    private void setUiConfigReadOnly(){
+        setReadOnlyTheWholeView();
+    }
+
+    private void setReadOnlyTheWholeView(){
+        List<View> viewListRoot = Utils.getAllChildren(mBinder.getRoot());
+        for(View v : viewListRoot){
+            v.setOnClickListener(null);
+            if(v instanceof EditText){
+                ((EditText)v).setInputType(InputType.TYPE_NULL);
+            }else if(v instanceof RadioGroup){
+                ((RadioGroup)v).setOnCheckedChangeListener(null);
+                ((RadioGroup)v).setActivated(false);
+            }else if(v instanceof RadioButton){
+                ((RadioButton)v).setEnabled(false);
+                ((RadioButton)v).setClickable(false);
+                ((RadioButton)v).setFocusable(false);
+            }
+
+        }
+        mBinder.getRoot().setActivated(false);
     }
 
     @Override

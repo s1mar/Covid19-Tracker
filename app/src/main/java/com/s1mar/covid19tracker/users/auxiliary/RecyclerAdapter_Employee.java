@@ -2,6 +2,7 @@ package com.s1mar.covid19tracker.users.auxiliary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,8 +21,9 @@ import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.data.models.TaskClientHealth;
 import com.s1mar.covid19tracker.databinding.ItemCardEmpStatusBinding;
+import com.s1mar.covid19tracker.functional_interfaces.IAction;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
-import com.s1mar.covid19tracker.utils.Toaster;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,11 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
     private HashMap<MUser,Integer> clientHealthStatusMap = new HashMap<>(0);
 
     private Toast mToast;
+
+    private IAction onClickEmp;
+    public RecyclerAdapter_Employee(IAction onClickEmp) {
+        this.onClickEmp = onClickEmp;
+    }
 
     @NonNull
     @Override
@@ -68,6 +75,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         //bind emp location
         bindLocationData(holder,employee);
 
+
+        holder.itemView.setOnClickListener(v->{
+            onClickEmp.onResult(employee);
+        });
 
         holder.binder.delete.setOnClickListener(v->{
             if(employee.isNotDeletable()){
@@ -113,6 +124,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
     }
 
     private void bindHealthStatus(ViewHolder holder, MUser employee){
+
        Integer healthStatus = employee.getHealthStatus();
        if(healthStatus==null){healthStatus = 0;}
        String health = "Health Status: ";
@@ -206,11 +218,12 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
    static class ViewHolder extends RecyclerView.ViewHolder{
         ItemCardEmpStatusBinding binder;
-        private Toaster mToaster;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             binder = ItemCardEmpStatusBinding.bind(itemView);
         }
 
     }
+
+
 }
