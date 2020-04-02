@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapter_Employee.ViewHolder> {
@@ -130,6 +132,22 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
             holder.binder.clientStatus.setVisibility(View.VISIBLE);
             holder.binder.workSite.setVisibility(View.VISIBLE);
         }
+
+
+        //Show the username and password
+        String usernameTxt = employee.getUsername();
+        String passwordTxt = employee.getPassword();
+        Spannable spanUsrName = new SpannableString("Username: "+usernameTxt);
+        Spannable spanPass = new SpannableString("Password: "+passwordTxt);
+        spanPass.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemView.getContext(),R.color.mediumTurquoise))
+                ,0,spanPass.length()-passwordTxt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spanUsrName.setSpan(new ForegroundColorSpan(ContextCompat.getColor(holder.itemView.getContext(),R.color.mediumTurquoise))
+                ,0,spanUsrName.length()-usernameTxt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+
+        holder.binder.bottomContainer.setVisibility(View.VISIBLE);
+        holder.binder.username.setText(spanUsrName);
+        holder.binder.password.setText(spanPass);
     }
 
     private void showToast(Context context, String msg){
@@ -153,7 +171,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
        Integer healthStatus = employee.getHealthStatus();
        if(healthStatus==null){healthStatus = 0;}
-       String health = "Health Status: ";
+       String health = "Health: ";
        String healthSub = "Normal";
        int color = Color.GREEN;
        if(healthStatus==1){
@@ -176,7 +194,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         if(holder==null){return;}
 
         if(healthStatus==null){healthStatus = 0;}
-        String health = "Client Health Status: ";
+        String health = "Client Health: ";
         String healthSub = "Normal";
         int color = Color.GREEN;
         if(healthStatus==1){
@@ -221,7 +239,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
     private void bindFamilyHealthStatus(ViewHolder holder, MUser employee){
         Integer healthStatus  = employee.getFamilyHealthStatus();
         if(healthStatus==null){healthStatus = 0;}
-        String health = "Family Health Status: ";
+        String health = "Family Health: ";
         String healthSub = "Normal";
         int color = Color.GREEN;
         if(healthStatus==1){

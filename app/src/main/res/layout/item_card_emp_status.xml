@@ -8,7 +8,49 @@
     android:layout_height="wrap_content"
     >
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+     <LinearLayout
+         android:visibility="gone"
+         android:paddingBottom="15dp"
+         android:gravity="center"
+         android:weightSum="2"
+         android:id="@+id/bottom_container"
+         android:orientation="vertical"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintBottom_toBottomOf="parent"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+         <TextView
+             android:layout_weight="1"
+             android:gravity="center"
+             android:id="@+id/username"
+             android:layout_width="wrap_content"
+             android:textSize="18sp"
+             tools:text="username: Caliburn"
+             android:layout_height="wrap_content"/>
+
+         <TextView
+             android:layout_weight="1"
+             android:gravity="center"
+             android:id="@+id/password"
+             android:layout_width="wrap_content"
+             android:textSize="18sp"
+             tools:text="password: Ryuka678911111"
+             android:layout_height="wrap_content"/>
+
+     </LinearLayout>
+
     <LinearLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_container"
         android:weightSum="2"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -95,5 +137,5 @@
 
 
       </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
