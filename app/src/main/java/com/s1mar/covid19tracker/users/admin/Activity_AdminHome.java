@@ -39,7 +39,7 @@ public class Activity_AdminHome extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("admin",false)
+        FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("admin",false).whereEqualTo("client",false)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {

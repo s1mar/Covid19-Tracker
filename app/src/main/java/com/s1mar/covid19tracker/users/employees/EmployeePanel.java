@@ -17,7 +17,9 @@ import com.google.gson.Gson;
 import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
+import com.s1mar.covid19tracker.data.models.TaskClientHealth;
 import com.s1mar.covid19tracker.databinding.ActUserProfileBinding;
+import com.s1mar.covid19tracker.functional_interfaces.IAction;
 import com.s1mar.covid19tracker.users.admin.Activity_FeedNews;
 import com.s1mar.covid19tracker.users.auxiliary.DialogFragment_HealthSelect;
 import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
@@ -74,7 +76,9 @@ public class EmployeePanel extends AppCompatActivity {
         mBinder.clientHealthStatus.txtHolder.setText("Client Health");
 
         myHealthStatus = mUser.getHealthStatus()==null?0:mUser.getHealthStatus();
-        clientHealthStatus = determineClientHealthStatus(mUser);
+        clientHealthStatus = determineClientHealthStatus(mUser,result -> {
+            setHealthStatus(mBinder.clientHealthStatus.imgHolder,clientHealthStatus);
+        });
         familyHealthStatus = mUser.getFamilyHealthStatus()==null?0:mUser.getFamilyHealthStatus();
 
         setHealthStatus(mBinder.myHealthStatus.imgHolder,myHealthStatus);
@@ -197,13 +201,12 @@ public class EmployeePanel extends AppCompatActivity {
         imageView.setTag(drawableId);
     }
 
-    Integer determineClientHealthStatus(MUser employee){
-        Integer clientHealthAssumed = 0;
-        if(employee.getClients()!=null && !employee.getClients().isEmpty()) {
-            for (MUser client : employee.getClients()) {
-                clientHealthAssumed = client.getHealthStatus() > clientHealthAssumed ? client.getHealthStatus() : clientHealthAssumed;
-            }
-        }
-        return clientHealthAssumed;
+
+    private Integer determineClientHealthStatus(MUser user, IAction action){
+        new TaskClientHealth(user,action).execute();
+        return 0; //Sync returns assumed health as healthy but, also runs a background async call to verify and update
+
     }
+
+
 }

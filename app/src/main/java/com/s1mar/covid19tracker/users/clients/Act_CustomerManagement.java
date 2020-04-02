@@ -51,45 +51,49 @@ public class Act_CustomerManagement extends AppCompatActivity {
         mBinder = LayoutClientManagementBinding.inflate(getLayoutInflater());
         mUser = new Gson().fromJson(PlayerPrefs.getString(Act_CustomerManagement.this,"muser"),MUser.class);
         mAdapter = new Adapter(mUser);
+        mBinder.recyclerView.setAdapter(mAdapter);
         initialization();
         mToaster = new Toaster(this);
         hookSaveButton();
+        setContentView(mBinder.getRoot());
     }
 
     private void hookSaveButton(){
+        mBinder.saveBtn.setOnClickListener(v->{
+            try{
 
-        try{
+                if(!NetworkUtils.hasNetworkConnectivity(this)){
+                    LoadingAnimationHelper.showMessage(this,"Please check your data and try again!");
+                    LoadingAnimationHelper.dismissWithDelay(this,TIME_DELAY);
+                    return;
+                }
 
-            if(!NetworkUtils.hasNetworkConnectivity(this)){
-                LoadingAnimationHelper.showMessage(this,"Please check your data and try again!");
-                LoadingAnimationHelper.dismissWithDelay(this,TIME_DELAY);
-                return;
+
+
+                mUser.setClients(mAdapter.getClients());
+                LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Updating...");
+                FireUsers.updateUser(mUser,actionResult->{
+                    LoadingAnimationHelper.dismissWithDelay(Act_CustomerManagement.this,TIME_DELAY);
+                    if(actionResult instanceof Boolean && (Boolean) actionResult){
+                        mToaster.showToast("Successfully Updated Clientele!",TOAST_LENGTH);
+                        PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
+                    }
+                    else {
+                        mToaster.showToast("Update Failed.",TOAST_LENGTH);
+                    }
+
+                });
+
+
+            }catch (Exception ex){
+                Log.e(TAG, "hookSaveButton: ",ex);
             }
-
-            mUser.setClients(mAdapter.getClients());
-
-            FireUsers.updateUser(mUser,actionResult->{
-                LoadingAnimationHelper.dismissWithDelay(Act_CustomerManagement.this,TIME_DELAY);
-                if(actionResult instanceof Boolean && (Boolean) actionResult){
-                    mToaster.showToast("Successfully Updated Clientele!",TOAST_LENGTH);
-                    PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
-                }
-                else {
-                    mToaster.showToast("Update Failed.",TOAST_LENGTH);
-                }
-
-            });
-
-
-        }catch (Exception ex){
-            Log.e(TAG, "hookSaveButton: ",ex);
-        }
-
+        });
     }
 
     private void initialization(){
 
-        FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("isClient",true).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("client",true).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if(e==null){
@@ -141,15 +145,30 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 clients.clear();
                 clients.addAll(dataSet);
 
-                for(MUser prospectiveClient: dataSet){
-                        if(user.getClients().contains(prospectiveClient)){
-                            Map_IsCheckedAsClient.put(prospectiveClient,true);
-                        }else{
-                            Map_IsCheckedAsClient.remove(prospectiveClient);
-                        }
+                //check the clients that this employee already contains
+               if(user.getClients()!=null && !user.getClients().isEmpty() && !dataSet.isEmpty()){
 
-                }
+                   //Stream<MUser> dataStream = Stream.of(dataSet);
+                   for(String clientKey : user.getClients()){
+                        String[] strArr = clientKey.split(";"); //username;user
+                        String username = strArr[0];
+                        String name = strArr[1];
 
+                     /*Optional<MUser> optionalMUser = dataStream.filter(u-> u.getUsername().equals(username)&&u.getName().equals(name)).findFirst();
+                     if(optionalMUser!=null && optionalMUser.get()!=null){
+                         Map_IsCheckedAsClient.put(optionalMUser.get(),true);
+                     }
+                    */
+
+                     for(MUser u : dataSet){
+
+                            if(u.getUsername().equals(username) && u.getName().equals(name)){
+                                Map_IsCheckedAsClient.put(u,true);
+                            }
+                     }
+
+                   }
+               }
 
                 notifyDataSetChanged();
             }
@@ -202,11 +221,16 @@ public class Act_CustomerManagement extends AppCompatActivity {
             holder.binder.checkMyClient.setOnCheckedChangeListener(null);
         }
 
-        List<MUser> getClients(){
+        List<String> getClients(){
+            List<String> clientListKeys = new ArrayList<>(0);
             if(Map_IsCheckedAsClient!=null && !Map_IsCheckedAsClient.isEmpty()){
-                return new ArrayList<>(Map_IsCheckedAsClient.keySet());
+
+                for(MUser user:Map_IsCheckedAsClient.keySet()){
+                    String key = user.getUsername()+";"+user.getName();
+                    clientListKeys.add(key);
+                }
             }
-            return new ArrayList<>(0);
+            return clientListKeys;
         }
 
         @Override

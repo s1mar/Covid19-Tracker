@@ -37,6 +37,7 @@
         <activity android:name=".users.employees.EmployeePanel" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity">
 
         </activity>
+        <activity android:name=".users.clients.Act_CustomerManagement" android:screenOrientation="sensorPortrait" tools:ignore="LockedOrientationActivity"/>
     </application>
 
 </manifest>

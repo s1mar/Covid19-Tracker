@@ -19,7 +19,7 @@ public class MUser implements Parcelable {
     private String currentLocation;
     private String homeTownAddress;
     private boolean client;
-    private List<MUser> clients;
+    private List<String> clients;
 
     public MUser() {
 
@@ -31,6 +31,13 @@ public class MUser implements Parcelable {
         this.password = password;
     }
 
+    public List<String> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<String> clients) {
+        this.clients = clients;
+    }
 
     public String getName() {
         return name;
@@ -80,13 +87,7 @@ public class MUser implements Parcelable {
         this.homeTownAddress = homeTownAddress;
     }
 
-    public List<MUser> getClients() {
-        return clients;
-    }
 
-    public void setClients(List<MUser> clients) {
-        this.clients = clients;
-    }
 
     public boolean isAdmin() {
         return admin;
@@ -156,7 +157,7 @@ public class MUser implements Parcelable {
         dest.writeString(this.currentLocation);
         dest.writeString(this.homeTownAddress);
         dest.writeByte(this.client ? (byte) 1 : (byte) 0);
-        dest.writeList(this.clients);
+        dest.writeStringList(this.clients);
     }
 
     protected MUser(Parcel in) {
@@ -172,11 +173,10 @@ public class MUser implements Parcelable {
         this.currentLocation = in.readString();
         this.homeTownAddress = in.readString();
         this.client = in.readByte() != 0;
-        this.clients = new ArrayList<MUser>();
-        in.readList(this.clients, MUser.class.getClassLoader());
+        this.clients = in.createStringArrayList();
     }
 
-    public static final Parcelable.Creator<MUser> CREATOR = new Parcelable.Creator<MUser>() {
+    public static final Creator<MUser> CREATOR = new Creator<MUser>() {
         @Override
         public MUser createFromParcel(Parcel source) {
             return new MUser(source);

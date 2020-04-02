@@ -43,6 +43,7 @@ ext {
     MULTIDEX_VER = "2.0.1"
     SPIN_VER = "1.4.0"
     GSON_VER = "2.8.6"
+    ANNIMON_STREAM = "1.2.1"
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -59,4 +60,5 @@ dependencies {
     implementation "androidx.multidex:multidex:$MULTIDEX_VER"
     implementation "com.github.ybq:Android-SpinKit:$SPIN_VER"
     implementation "com.google.code.gson:gson:$GSON_VER"
+    //implementation "com.annimon:stream:$ANNIMON_STREAM"
 }

@@ -12,14 +12,19 @@ import androidx.annotation.NonNull;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.s1mar.covid19tracker.R;
 
+import com.s1mar.covid19tracker.data.Constants;
 import com.s1mar.covid19tracker.data.models.MUser;
+import com.s1mar.covid19tracker.data.models.TaskClientHealth;
 import com.s1mar.covid19tracker.databinding.ItemCardEmpStatusBinding;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 
 public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapter_Employee.ViewHolder> {
 
@@ -89,20 +94,11 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
     }
 
-    private void bindClientHealthStatus(ViewHolder holder,MUser employee){
-        if(employee.getClients()==null || employee.getClients().isEmpty()){
-            holder.binder.clientStatus.setVisibility(View.GONE);
-            return;
-        }
-        if(!clientHealthStatusMap.containsKey(employee)){
 
-            int clientHealthAssumed = 0; //0->stands for healthy
-            for(MUser client: employee.getClients()){
-                clientHealthAssumed = client.getHealthStatus()>clientHealthAssumed?client.getHealthStatus():clientHealthAssumed;
-            }
-            clientHealthStatusMap.put(employee,clientHealthAssumed);
-        }
-        Integer healthStatus = clientHealthStatusMap.get(employee);
+    private void bindClientHealthStatus_Tres(ViewHolder holder, Integer healthStatus){
+        //Integer healthStatus = clientHealthStatusMap.get(employee);
+        if(holder==null){return;}
+
         if(healthStatus==null){healthStatus = 0;}
         String health = "Client Health Status: ";
         String healthSub = "Normal";
@@ -118,6 +114,31 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         Spannable span = new SpannableString(healthFinal);
         span.setSpan(new ForegroundColorSpan(color), health.length(), healthFinal.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.binder.clientStatus.setText(span);
+
+    }
+
+
+    private void bindClientHealthStatus(ViewHolder holder,MUser employee){
+
+        if(employee.getClients()==null || !employee.getClients().isEmpty())
+        {
+            bindClientHealthStatus_Tres(holder,0); //assume the client(s) to be healthy
+        }
+        else{
+
+            //We have client health data in the map
+            if(clientHealthStatusMap.containsKey(employee) && clientHealthStatusMap.get(employee)!=null){
+                bindClientHealthStatus_Tres(holder,clientHealthStatusMap.get(employee));
+            }
+            else{
+                //We'll query the database and update data
+               new TaskClientHealth(employee,result -> {
+                   clientHealthStatusMap.put(employee,(Integer)result);
+                   bindClientHealthStatus_Tres(holder,(Integer)result);
+               }).execute();
+            }
+
+        }
 
     }
 
