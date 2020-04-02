@@ -12,6 +12,7 @@ import com.s1mar.covid19tracker.data.Constants;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.AdminEmpStatusLayoutBinding;
 import com.s1mar.covid19tracker.users.auxiliary.RecyclerAdapter_Employee;
+import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
 import com.s1mar.covid19tracker.users.employees.EmployeePanel;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
 
@@ -110,8 +111,10 @@ public class Activity_EmpStatus extends AppCompatActivity {
 
     private void onClick_launchDetails(MUser user){
         if(user.isAdmin()){return;}
-        Intent launchIntent = new Intent(this, EmployeePanel.class);
-        launchIntent.putExtra("config",2);
+        int valueToSend = user.isClient()?1:2;
+        Class<? extends AppCompatActivity> classToGoto = user.isClient()? Act_CustomerManagement.class:EmployeePanel.class;
+        Intent launchIntent = new Intent(this, classToGoto);
+        launchIntent.putExtra("config",valueToSend);
         launchIntent.putExtra("parcel",user);
         startActivity(launchIntent);
     }
