@@ -110,8 +110,17 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
                 }
             });
         });
-
-        if(filterView==3){
+        if(filterView==0){
+            holder.binder.workSite.setVisibility(View.GONE);
+            holder.binder.familyStatus.setVisibility(View.GONE);
+            holder.binder.clientStatus.setVisibility(View.GONE);
+        }
+        else if(filterView==1){
+            holder.binder.workSite.setVisibility(View.GONE);
+            holder.binder.familyStatus.setVisibility(View.GONE);
+            holder.binder.clientStatus.setVisibility(View.GONE);
+        }
+        else if(filterView==3){
             holder.binder.familyStatus.setVisibility(View.GONE);
             holder.binder.clientStatus.setVisibility(View.GONE);
             holder.binder.workSite.setVisibility(View.GONE);
@@ -187,7 +196,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
     private void bindClientHealthStatus(ViewHolder holder,MUser employee){
 
-        if(employee.getClients()==null || !employee.getClients().isEmpty())
+        if(employee.getClients()==null || employee.getClients().isEmpty())
         {
             bindClientHealthStatus_Tres(holder,0); //assume the client(s) to be healthy
         }
