@@ -110,8 +110,9 @@ public class Activity_EmpStatus extends AppCompatActivity {
 
     private void onClick_launchDetails(MUser user){
         if(user.isAdmin()){return;}
+        int valueToSend = user.isClient()?1:2;
         Intent launchIntent = new Intent(this, EmployeePanel.class);
-        launchIntent.putExtra("config",2);
+        launchIntent.putExtra("config",valueToSend);
         launchIntent.putExtra("parcel",user);
         startActivity(launchIntent);
     }
