@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -65,15 +66,33 @@ public class EmployeePanel extends AppCompatActivity {
             mBinder.feedCard.setVisibility(View.GONE);
         }else if(configValue==1){
             //Client Access
-            setUiConfigReadOnly();
+            disableAllViewsUnderTheViewGroup(mBinder.radioGroupWorkingPlace);
+            disableAllViewsUnderTheViewGroup(mBinder.containerStatus);
+            disableAllViewsUnderTheViewGroup(mBinder.edtCurrentPlace);
+            disableAllViewsUnderTheViewGroup(mBinder.edtHometown);
+            disableAllViewsUnderTheViewGroup(mBinder.edtPlacesVisited);
             mBinder.btnSaveData.setVisibility(View.GONE);
             mBinder.feedCard.setVisibility(View.GONE);
             mBinder.clientCardLabel.setText(R.string.emp_assigned);
-            mBinder.clientCard.setEnabled(true);
             mBinder.clientCard.setOnClickListener(this::OnClick_ClientCard);
+
         }
     }
 
+   private void disableAllViewsUnderTheViewGroup(ViewGroup vg){
+
+        for(int i =0;i<vg.getChildCount();i++){
+            View v = vg.getChildAt(i);
+            if(v instanceof ViewGroup){
+                disableAllViewsUnderTheViewGroup((ViewGroup) v);
+            }
+            if(v instanceof EditText){
+                ((EditText)v).setInputType(InputType.TYPE_NULL);
+            }
+            v.setEnabled(false);
+            v.setActivated(false);
+        }
+   }
 
     //config means
     //0->self
