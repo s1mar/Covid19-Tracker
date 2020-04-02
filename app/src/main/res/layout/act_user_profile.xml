@@ -196,15 +196,16 @@
             android:minWidth="150dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-                
+
             <TextView
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:id="@+id/client_card_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Manage\nCustomers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
             
             <ImageView
                 android:layout_marginTop="10dp"

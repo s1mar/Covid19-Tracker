@@ -48,6 +48,7 @@ public class EmployeePanel extends AppCompatActivity {
     private Toaster mToaster;
 
     private int configValue;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +63,14 @@ public class EmployeePanel extends AppCompatActivity {
             mBinder.btnSaveData.setVisibility(View.GONE);
             mBinder.clientCard.setVisibility(View.GONE);
             mBinder.feedCard.setVisibility(View.GONE);
+        }else if(configValue==1){
+            //Client Access
+            setUiConfigReadOnly();
+            mBinder.btnSaveData.setVisibility(View.GONE);
+            mBinder.feedCard.setVisibility(View.GONE);
+            mBinder.clientCardLabel.setText(R.string.emp_assigned);
+            mBinder.clientCard.setEnabled(true);
+            mBinder.clientCard.setOnClickListener(this::OnClick_ClientCard);
         }
     }
 
@@ -224,14 +233,24 @@ public class EmployeePanel extends AppCompatActivity {
         });
 
 
-        mBinder.clientCard.setOnClickListener(v->{
-            LoaderUtil.loadAct(this, Act_CustomerManagement.class,null);
-        });
+        mBinder.clientCard.setOnClickListener(this::OnClick_ClientCard);
 
         mBinder.feedCard.setOnClickListener(v->{
             LoaderUtil.loadAct(this, Activity_FeedNews.class,null);
         });
 
+    }
+
+    private void OnClick_ClientCard(View v){
+        //TODO It's shotgun surgery but make it cleaner later
+        if(configValue>=1){
+
+            Intent intent = new Intent(EmployeePanel.this,Act_CustomerManagement.class);
+            intent.putExtra("config",configValue);
+            startActivity(intent);
+            return;
+        }
+        LoaderUtil.loadAct(this, Act_CustomerManagement.class,null);
     }
 
     private void setWorkFromHomeOrNot(boolean onSite){
