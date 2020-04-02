@@ -60,5 +60,5 @@ dependencies {
     implementation "androidx.multidex:multidex:$MULTIDEX_VER"
     implementation "com.github.ybq:Android-SpinKit:$SPIN_VER"
     implementation "com.google.code.gson:gson:$GSON_VER"
-    //implementation "com.annimon:stream:$ANNIMON_STREAM"
+    implementation "com.annimon:stream:$ANNIMON_STREAM"
 }

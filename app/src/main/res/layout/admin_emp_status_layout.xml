@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/header_bar"
         android:layout_width="match_parent"
@@ -43,7 +45,48 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+    <RadioGroup
+        android:layout_margin="10dp"
+        android:checkedButton="@id/rb_All"
+        android:weightSum="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_bar"
+        android:orientation="horizontal"
+        android:id="@+id/rg_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:layout_weight="1"
+            android:id="@+id/rb_All"
+            android:text="All"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:layout_weight="1"
+            android:id="@+id/rb_Managers"
+            android:text="Managers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:layout_weight="1"
+            android:id="@+id/rb_Employees"
+            android:text="Employees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:layout_weight="1"
+            android:id="@+id/rb_Customers"
+            android:text="Customers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </RadioGroup>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -52,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_bar"
+        app:layout_constraintTop_toBottomOf="@id/rg_options"
         tools:listitem="@layout/item_card_emp_status" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
