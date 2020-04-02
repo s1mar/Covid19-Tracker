@@ -3,9 +3,11 @@ package com.s1mar.covid19tracker.users.clients;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -28,11 +31,14 @@ import com.s1mar.covid19tracker.databinding.LayoutClientManagementBinding;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import com.s1mar.covid19tracker.utils.NetworkUtils;
 import com.s1mar.covid19tracker.utils.PlayerPrefs;
+import com.s1mar.covid19tracker.utils.TextUtils;
 import com.s1mar.covid19tracker.utils.Toaster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public class Act_CustomerManagement extends AppCompatActivity {
@@ -68,27 +74,56 @@ public class Act_CustomerManagement extends AppCompatActivity {
                     return;
                 }
 
-
-
-                mUser.setClients(mAdapter.getClients());
-                LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Updating...");
-                FireUsers.updateUser(mUser,actionResult->{
-                    LoadingAnimationHelper.dismissWithDelay(Act_CustomerManagement.this,TIME_DELAY);
-                    if(actionResult instanceof Boolean && (Boolean) actionResult){
-                        mToaster.showToast("Successfully Updated Clientele!",TOAST_LENGTH);
-                        PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
-                    }
-                    else {
-                        mToaster.showToast("Update Failed.",TOAST_LENGTH);
-                    }
-
-                });
+                //Commence update
+                update();
 
 
             }catch (Exception ex){
                 Log.e(TAG, "hookSaveButton: ",ex);
             }
         });
+    }
+
+    private void update(){
+
+
+        HashMap<String,Integer> clientAndHealthDict = mAdapter.getClientData();
+
+        //Set clients
+        mUser.setClients(new ArrayList<>(clientAndHealthDict.keySet()));
+
+        //Not an optimum way to update client infection status but for now it will do
+        //TODO In the future extract the document reference when creating the client key and use it to update the client directly
+
+        LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Updating...");
+        FireUsers.updateUser(mUser,actionResult->{
+            LoadingAnimationHelper.dismissWithDelay(Act_CustomerManagement.this,TIME_DELAY);
+            if(actionResult instanceof Boolean && (Boolean) actionResult){
+                mToaster.showToast("Successfully Updated Clientele!",TOAST_LENGTH);
+                PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
+
+                //Now,let's update the clientele health data
+              Iterator<Map.Entry<String,Integer>> iterator = clientAndHealthDict.entrySet().iterator();
+              while (iterator.hasNext()){
+
+                  Map.Entry<String ,Integer> entry = iterator.next();
+                  String username = entry.getKey().split(";")[0];
+                  FirebaseFirestore.getInstance().collection(Constants.USERS)
+                          .whereEqualTo("username",username).get().addOnSuccessListener(queryDocumentSnapshots -> {
+                              DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                              FirebaseFirestore.getInstance()
+                                      .document(documentReference.getPath()).update("healthStatus",entry.getValue());
+                          });
+              }
+
+            }
+            else {
+                mToaster.showToast("Update Failed.",TOAST_LENGTH);
+            }
+
+        });
+
+
     }
 
     private void initialization(){
@@ -134,6 +169,8 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
         private List<MUser> clients = new ArrayList<>(0);
         private HashMap<MUser,Boolean> Map_IsCheckedAsClient = new HashMap<>(0);
+        private HashMap<MUser,Integer> Map_ClientHealth = new HashMap<>(0);
+
         private MUser user;
 
         Adapter(MUser user) {
@@ -148,17 +185,11 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 //check the clients that this employee already contains
                if(user.getClients()!=null && !user.getClients().isEmpty() && !dataSet.isEmpty()){
 
-                   //Stream<MUser> dataStream = Stream.of(dataSet);
+
                    for(String clientKey : user.getClients()){
                         String[] strArr = clientKey.split(";"); //username;user
                         String username = strArr[0];
                         String name = strArr[1];
-
-                     /*Optional<MUser> optionalMUser = dataStream.filter(u-> u.getUsername().equals(username)&&u.getName().equals(name)).findFirst();
-                     if(optionalMUser!=null && optionalMUser.get()!=null){
-                         Map_IsCheckedAsClient.put(optionalMUser.get(),true);
-                     }
-                    */
 
                      for(MUser u : dataSet){
 
@@ -185,7 +216,8 @@ public class Act_CustomerManagement extends AppCompatActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             MUser client = clients.get(position);
             holder.binder.txtName.setText(client.getName());
-            holder.binder.txtLocName.setText(client.getCurrentLocation());
+            String location = TextUtils.isStringEmpty(client.getCurrentLocation())?holder.itemView.getContext().getString(R.string.location_not_provided):client.getCurrentLocation();
+            holder.binder.txtLocName.setText(location);
             Integer clientHealthStatus = client.getHealthStatus();
 
             clientHealthStatus = clientHealthStatus==null?0:clientHealthStatus;
@@ -202,17 +234,39 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
             if(Map_IsCheckedAsClient.containsKey(client) && Map_IsCheckedAsClient.get(client)!=null){
                     holder.binder.checkMyClient.setChecked(Map_IsCheckedAsClient.get(client));
+                    holder.enableChangeHealthStatusView(true);
+            }
+            else {
+                holder.enableChangeHealthStatusView(false);
             }
 
             holder.binder.checkMyClient.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if(isChecked){
                     Map_IsCheckedAsClient.put(client,true);
+                    holder.enableChangeHealthStatusView(true);
                 }
                 else{
                    Map_IsCheckedAsClient.remove(client);
+                   Map_ClientHealth.remove(client); //Since it's a not client hence the privilege to change health data is also gone
+                   holder.enableChangeHealthStatusView(false);
                 }
             });
 
+            holder.binder.healthStatusContainer.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                    if(checkedId==R.id.green){
+                        Map_ClientHealth.put(client,0);
+                    }
+                    else if(checkedId==R.id.yellow){
+                        Map_ClientHealth.put(client,1);
+                    }
+                    else if(checkedId==R.id.red){
+                        Map_ClientHealth.put(client,2);
+                    }
+                }
+            });
         }
 
         @Override
@@ -221,16 +275,18 @@ public class Act_CustomerManagement extends AppCompatActivity {
             holder.binder.checkMyClient.setOnCheckedChangeListener(null);
         }
 
-        List<String> getClients(){
-            List<String> clientListKeys = new ArrayList<>(0);
+        HashMap<String,Integer> getClientData(){
+            HashMap<String,Integer> clientAndHealthDataMap = new HashMap<>(0);
             if(Map_IsCheckedAsClient!=null && !Map_IsCheckedAsClient.isEmpty()){
 
                 for(MUser user:Map_IsCheckedAsClient.keySet()){
                     String key = user.getUsername()+";"+user.getName();
-                    clientListKeys.add(key);
+                    Integer healthValue = Map_ClientHealth.get(user)!=null?Map_ClientHealth.get(user):0;
+                    clientAndHealthDataMap.put(key,healthValue);
                 }
             }
-            return clientListKeys;
+
+            return clientAndHealthDataMap;
         }
 
         @Override
@@ -246,7 +302,14 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 binder = CustomerItemCardBinding.bind(itemView);
 
             }
+
+            void enableChangeHealthStatusView(boolean flag){
+                int vFlag = flag?View.VISIBLE:View.GONE;
+                binder.healthStatusContainer.setVisibility(vFlag);
+            }
         }
+
+
     }
 
 
