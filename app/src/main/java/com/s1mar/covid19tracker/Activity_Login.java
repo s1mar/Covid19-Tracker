@@ -1,5 +1,7 @@
 package com.s1mar.covid19tracker;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -71,13 +73,23 @@ public class Activity_Login extends AppCompatActivity {
                     mToaster.showToast("Login Successful",messageDuration);
 
                    Class<? extends AppCompatActivity> activityToLoad = null;
-                   if(user.isAdmin()){activityToLoad = Activity_AdminHome.class; }
-                   else if(!user.isClient()) {
-                       activityToLoad = EmployeePanel.class;
+                   int configValue = 0;
+                   if(user.isAdmin()){
+                       configValue = 2;
+                       activityToLoad = Activity_AdminHome.class;
                    }
-                   PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));
+                   else{
+                       activityToLoad = EmployeePanel.class;
+                       if(user.isClient()){configValue=1;}
+                   }
+                    PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));
 
-                    LoaderUtil.loadAct(this,activityToLoad,null);
+
+                    Intent launchIntent = new Intent(this,activityToLoad);
+                    launchIntent.putExtra("config",configValue);
+                    launchIntent.putExtra("parcel",user);
+                    startActivity(launchIntent);
+                    //LoaderUtil.loadAct(this,activityToLoad,null);
                     //Finish this activity
                     finish();
                 }

@@ -82,5 +82,6 @@
     <string name="clients">Clients</string>
     <string name="title_user_status">Users Status</string>
     <string name="location_not_provided">Location not provided</string>
+    <string name="emp_assigned">Employees Assigned</string>
 
 </resources>

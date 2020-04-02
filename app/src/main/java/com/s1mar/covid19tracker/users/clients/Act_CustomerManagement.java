@@ -3,7 +3,7 @@ package com.s1mar.covid19tracker.users.clients;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Pair;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Function;
 import com.annimon.stream.function.Predicate;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,16 +32,13 @@ import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.CustomerItemCardBinding;
 import com.s1mar.covid19tracker.databinding.LayoutClientManagementBinding;
-
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
 import com.s1mar.covid19tracker.utils.NetworkUtils;
 import com.s1mar.covid19tracker.utils.PlayerPrefs;
 import com.s1mar.covid19tracker.utils.TextUtils;
 import com.s1mar.covid19tracker.utils.Toaster;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,17 +52,30 @@ public class Act_CustomerManagement extends AppCompatActivity {
     private static final long  TIME_DELAY = 2000L;  private static final int TOAST_LENGTH = Toast.LENGTH_LONG;
 
     private MUser mUser;
+    private int configValue;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mBinder = LayoutClientManagementBinding.inflate(getLayoutInflater());
         mUser = new Gson().fromJson(PlayerPrefs.getString(Act_CustomerManagement.this,"muser"),MUser.class);
-        mAdapter = new Adapter(mUser);
-        mBinder.recyclerView.setAdapter(mAdapter);
-        initialization();
+
         mToaster = new Toaster(this);
-        hookSaveButton();
+
+        //process parcel
+        configValue = getIntent().getIntExtra("config",0);
+        mAdapter = new Adapter(mUser,configValue);
+        mBinder.recyclerView.setAdapter(mAdapter);
+
+        if(configValue==1){
+            mBinder.saveBtn.setVisibility(View.GONE);
+            initializationCLient();
+        }else {
+            initialization();
+            hookSaveButton();
+        }
         setContentView(mBinder.getRoot());
     }
 
@@ -154,6 +166,42 @@ public class Act_CustomerManagement extends AppCompatActivity {
     }
 
 
+    private void initializationCLient(){
+
+
+        if(mUser.getEmployeesAssigned()==null || mUser.getEmployeesAssigned().isEmpty()){
+            LoadingAnimationHelper.showMessage(this,"No Employees Assigned");
+            return;
+        }
+
+         FirebaseFirestore db = FirebaseFirestore.getInstance();
+         List<Task> tasks = new ArrayList<>(0);
+         for(String username : mUser.getEmployeesAssigned()){
+                tasks.add(db.collection(Constants.USERS).whereEqualTo("username",username).get());
+         }
+
+         LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Initializing...");
+         Tasks.whenAllSuccess((Task<?>) tasks).addOnSuccessListener(listUsers->{
+            LoadingAnimationHelper.dismiss(Act_CustomerManagement.this);
+            if(listUsers==null || listUsers.isEmpty()){
+                LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"No Employees Assigned");
+            }    else{
+
+              List<MUser> dataSet = Stream.of(listUsers).map(new Function<Object, MUser>() {
+                    @Override
+                    public MUser apply(Object o) {
+                        return (MUser)o;
+                    }
+                }).toList();
+
+            mAdapter.updateDataSet(dataSet);
+            }
+
+        }).addOnFailureListener(e->{
+           LoadingAnimationHelper.showMessage(Act_CustomerManagement.this,"Something went wrong");
+        });
+
+    }
     private void initialization(){
 
         FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("client",true).addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -200,8 +248,9 @@ public class Act_CustomerManagement extends AppCompatActivity {
         private HashMap<MUser,Integer> Map_ClientHealth = new HashMap<>(0);
 
         private MUser user;
-
-        Adapter(MUser user) {
+        private int configValue;
+        Adapter(MUser user,int configValue) {
+            this.configValue = configValue;
             this.user = user;
         }
 
@@ -242,6 +291,36 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+           if(configValue==1){
+
+               MUser emp = clients.get(0);
+               holder.binder.checkMyClient.setChecked(true);
+               holder.binder.checkMyClient.setEnabled(false);
+               holder.binder.txtName.setText(emp.getName());
+               String location = TextUtils.isStringEmpty(emp.getCurrentLocation())?holder.itemView.getContext().getString(R.string.location_not_provided):emp.getCurrentLocation();
+               holder.binder.txtLocName.setText(location);
+
+               int healthStatus = emp.getHealthStatus()==null?0:emp.getHealthStatus();
+               if(healthStatus==0){
+                   holder.binder.green.setChecked(true);
+               }
+               else if(healthStatus == 1){
+                   holder.binder.yellow.setChecked(true);
+               }
+               else if(healthStatus==2){
+                   holder.binder.red.setChecked(true);
+               }
+
+               holder.binder.healthStatusContainer.setActivated(false);
+               holder.binder.healthStatusContainer.setEnabled(false);
+
+
+               return;
+           }
+
+
+
             MUser client = clients.get(position);
             holder.binder.txtName.setText(client.getName());
             String location = TextUtils.isStringEmpty(client.getCurrentLocation())?holder.itemView.getContext().getString(R.string.location_not_provided):client.getCurrentLocation();
