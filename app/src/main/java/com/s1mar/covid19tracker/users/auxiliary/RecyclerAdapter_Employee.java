@@ -187,7 +187,7 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
 
     private void bindClientHealthStatus(ViewHolder holder,MUser employee){
 
-        if(employee.getClients()==null || !employee.getClients().isEmpty())
+        if(employee.getClients()==null || employee.getClients().isEmpty())
         {
             bindClientHealthStatus_Tres(holder,0); //assume the client(s) to be healthy
         }
