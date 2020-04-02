@@ -14,6 +14,7 @@ import com.s1mar.covid19tracker.data.FireUsers;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.databinding.ActLoginBinding;
 import com.s1mar.covid19tracker.users.admin.Activity_AdminHome;
+import com.s1mar.covid19tracker.users.clients.Act_CustomerManagement;
 import com.s1mar.covid19tracker.users.employees.EmployeePanel;
 import com.s1mar.covid19tracker.utils.LoaderUtil;
 import com.s1mar.covid19tracker.utils.LoadingAnimationHelper;
@@ -78,9 +79,12 @@ public class Activity_Login extends AppCompatActivity {
                        configValue = 2;
                        activityToLoad = Activity_AdminHome.class;
                    }
-                   else{
+                   else if(user.isClient()){
+                       configValue = 1;
+                       activityToLoad = Act_CustomerManagement.class;
+
+                   }else{
                        activityToLoad = EmployeePanel.class;
-                       if(user.isClient()){configValue=1;}
                    }
                     PlayerPrefs.setString(Activity_Login.this,"muser",new Gson().toJson(user));
 
