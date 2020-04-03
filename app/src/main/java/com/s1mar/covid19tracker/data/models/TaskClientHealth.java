@@ -50,13 +50,14 @@ public class TaskClientHealth extends AsyncTask<Void,Void,Void> {
                                         clientHealth[0] = user != null && user.getHealthStatus() != null && user.getHealthStatus() > clientHealth[0] ? user.getHealthStatus() : clientHealth[0];
                                     }else {
                                         //These clients most probably do not exist anymore; remove them from the original mUser
-                                        if (!emp.isAdmin()) {
+
                                             emp.removeClient(key);
-                                            if (weakContext.get() != null) {
+                                            if (weakContext.get() != null && !emp.isAdmin()) {
                                                 PlayerPrefs.setString(weakContext.get(), "muser", new Gson().toJson(emp));
                                             }
-                                        }
                                     }
+
+
 
                             }
 
