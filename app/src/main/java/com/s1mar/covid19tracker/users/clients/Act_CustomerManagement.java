@@ -133,7 +133,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
         FireUsers.updateUser(mUser,actionResult->{
             LoadingAnimationHelper.dismissWithDelay(Act_CustomerManagement.this,TIME_DELAY);
             if(actionResult instanceof Boolean && (Boolean) actionResult){
-                mToaster.showToast("Successfully Updated Clientele!",TOAST_LENGTH);
+                mToaster.showToast("Successfully Updated Client!",TOAST_LENGTH);
                 PlayerPrefs.setString(Act_CustomerManagement.this,"muser",new Gson().toJson(mUser));
 
                 //Now,let's update the clientele health data
@@ -359,7 +359,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                         colorHealthStatus = Color.RED;
                    }
                }
-               personalHealthStatus = "Personal Health "+personalHealthStatus+"\n";
+               personalHealthStatus = "Personal Health: "+personalHealthStatus+"\n";
 
 
                int colorFamilyStatus = Color.GREEN;
@@ -374,7 +374,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                        colorFamilyStatus = Color.RED;
                    }
                }
-               familyHealthStatus="Family Health "+familyHealthStatus+"\n";
+               familyHealthStatus="Family Health: "+familyHealthStatus+"\n";
 
                Spannable personalHealth = new SpannableString(personalHealthStatus);
                personalHealth.setSpan(new ForegroundColorSpan(colorHealthStatus),15,personalHealth.length()

@@ -112,8 +112,17 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
                 }
             });
         });
-
-        if(filterView==3){
+        if(filterView==0){
+            holder.binder.workSite.setVisibility(View.GONE);
+            holder.binder.familyStatus.setVisibility(View.GONE);
+            holder.binder.clientStatus.setVisibility(View.GONE);
+        }
+        else if(filterView==1){
+            holder.binder.workSite.setVisibility(View.GONE);
+            holder.binder.familyStatus.setVisibility(View.GONE);
+            holder.binder.clientStatus.setVisibility(View.GONE);
+        }
+        else if(filterView==3){
             holder.binder.familyStatus.setVisibility(View.GONE);
             holder.binder.clientStatus.setVisibility(View.GONE);
             holder.binder.workSite.setVisibility(View.GONE);
