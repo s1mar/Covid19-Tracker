@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.annimon.stream.Stream;
@@ -349,11 +350,11 @@ public class Act_CustomerManagement extends AppCompatActivity {
                String personalHealthStatus = "Normal";
 
 
-               int colorHealthStatus = Color.GREEN;
+               int colorHealthStatus = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_green);
                if(emp.getHealthStatus()!=null){
                    if(emp.getHealthStatus()==1){
                        personalHealthStatus = "Observation";
-                       colorHealthStatus = Color.YELLOW;
+                       colorHealthStatus = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_orange);
                    }else if(emp.getHealthStatus() == 2){
                         personalHealthStatus = "Infected";
                         colorHealthStatus = Color.RED;
@@ -362,13 +363,13 @@ public class Act_CustomerManagement extends AppCompatActivity {
                personalHealthStatus = "Personal Health: "+personalHealthStatus+"\n";
 
 
-               int colorFamilyStatus = Color.GREEN;
+               int colorFamilyStatus = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_green);
                String familyHealthStatus = "Normal";
 
                if(emp.getFamilyHealthStatus()!=null){
                    if(emp.getFamilyHealthStatus()==1){
                        familyHealthStatus = "Observation";
-                       colorFamilyStatus = Color.YELLOW;
+                       colorFamilyStatus = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_orange);
                    }else if(emp.getFamilyHealthStatus() == 2){
                        familyHealthStatus = "Infected";
                        colorFamilyStatus = Color.RED;
@@ -389,7 +390,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                //span.setSpan(new ForegroundColorSpan(color), health.length(), healthFinal.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                //String str = personalHealthStatus+"\n"+familyHealthStatus+"\n"+onSite;
                holder.binder.txtLocName.setText( android.text.TextUtils.concat(location,personalHealth,familyHealth,onSite));
-               holder.binder.txtLocName.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+               holder.binder.txtLocName.setTextSize(TypedValue.COMPLEX_UNIT_DIP,16);
                holder.binder.txtLocName.setMaxLines(5);
                holder.binder.txtLocName.setMaxEms(12);
                holder.binder.healthStatusContainer.setVisibility(View.GONE);

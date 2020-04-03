@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="5dp"
     android:gravity="center"
     android:orientation="vertical"
     android:layout_width="wrap_content"
@@ -7,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:textColor="@color/mediumTurquoise"
         android:id="@+id/txt_holder"
@@ -16,10 +17,11 @@
         android:layout_height="wrap_content"/>
 
     <ImageView
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/img_holder"
         tools:src="@drawable/normal_circle"
-        android:layout_width="30dp"
-        android:layout_height="30dp"/>
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
 
 </LinearLayout>

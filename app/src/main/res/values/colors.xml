@@ -13,4 +13,7 @@
     <color name="yellow">#FFEB3B</color>
     <color name="color_snow">#FFFAFA</color>
     <color name="red">#F44336</color>
+
+    <color name="ak_green">#11890C</color>
+    <color name="ak_orange">#DF8315</color>
 </resources>

@@ -173,10 +173,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
        if(healthStatus==null){healthStatus = 0;}
        String health = "Health: ";
        String healthSub = "Normal";
-       int color = Color.GREEN;
+        int color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_green);
        if(healthStatus==1){
         healthSub = "Observation";
-        color = Color.argb(100,255,165,0);
+           color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_orange);
        }else if(healthStatus==2){
            healthSub = "Infected";
            color = Color.RED;
@@ -196,10 +196,10 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         if(healthStatus==null){healthStatus = 0;}
         String health = "Client Health: ";
         String healthSub = "Normal";
-        int color = Color.GREEN;
+        int color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_green);
         if(healthStatus==1){
             healthSub = "Observation";
-            color = Color.argb(100,255,165,0);
+            color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_orange);
         }else if(healthStatus==2){
             healthSub = "Infected";
             color = Color.RED;
@@ -241,10 +241,14 @@ public class RecyclerAdapter_Employee extends RecyclerView.Adapter<RecyclerAdapt
         if(healthStatus==null){healthStatus = 0;}
         String health = "Family Health: ";
         String healthSub = "Normal";
-        int color = Color.GREEN;
+
+        //int color = Color.GREEN;
+        int color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_green);
         if(healthStatus==1){
             healthSub = "Observation";
-            color = Color.argb(100,255,165,0);
+
+            //color = Color.argb(100,255,165,0);
+            color = ContextCompat.getColor(holder.itemView.getContext(),R.color.ak_orange);
         }else if(healthStatus==2){
             healthSub = "Infected";
             color = Color.RED;
