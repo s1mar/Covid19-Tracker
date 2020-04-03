@@ -1,7 +1,12 @@
 package com.s1mar.covid19tracker.data;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.model.ServerTimestamps;
 import com.s1mar.covid19tracker.data.models.MFeedItem;
 import com.s1mar.covid19tracker.functional_interfaces.IAction;
 
@@ -29,9 +34,23 @@ public class FireFeed {
         FirebaseFirestore.getInstance().collection(Constants.FEED).document("/"+feedItem.getId()).get()
                 .addOnCompleteListener(task -> {
                    try{
-                       task.getResult().getReference().set(feedItem)
-                               .addOnSuccessListener(action::onResult)
-                               .addOnFailureListener(action::onResult);
+                     DocumentReference documentReference = task.getResult().getReference();
+                     Task updateTheItem = documentReference.set(feedItem);
+                     Task updateTheTimeField = documentReference.update("time",com.google.firebase.firestore.FieldValue.serverTimestamp());
+
+                      Tasks.whenAllSuccess(updateTheItem,updateTheTimeField)
+                                .addOnSuccessListener(action::onResult)
+                                .addOnFailureListener(action::onResult);
+
+                   /* .addOnCompleteListener(taskAlpha->{
+                                  if(taskAlpha.isSuccessful() && taskAlpha.getResult()!=null){
+                                      action.onResult(true);
+                                  }
+                                  else{
+                                      action.onResult(taskAlpha.getException());
+                                  }
+                              });*/
+
 
                    }catch (Exception ex){
                         action.onResult(ex);

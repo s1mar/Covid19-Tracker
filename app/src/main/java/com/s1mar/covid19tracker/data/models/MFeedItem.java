@@ -18,6 +18,9 @@ public class MFeedItem implements Parcelable {
     @ServerTimestamp
     private Date time;
 
+    @ServerTimestamp
+    private Date updatedTime;
+
     public String getSubject() {
         return subject;
     }
@@ -43,7 +46,8 @@ public class MFeedItem implements Parcelable {
     }
 
     public Date getTime() {
-        return time;
+        return time == null?updatedTime:time;
+
     }
 
     public void setTime(Date time) {
@@ -51,6 +55,14 @@ public class MFeedItem implements Parcelable {
     }
 
     public MFeedItem() {
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
     @Override
@@ -64,6 +76,7 @@ public class MFeedItem implements Parcelable {
         dest.writeString(this.subject);
         dest.writeString(this.desc);
         dest.writeLong(this.time != null ? this.time.getTime() : -1);
+        dest.writeLong(this.updatedTime != null ? this.updatedTime.getTime() : -1);
     }
 
     protected MFeedItem(Parcel in) {
@@ -72,6 +85,8 @@ public class MFeedItem implements Parcelable {
         this.desc = in.readString();
         long tmpTime = in.readLong();
         this.time = tmpTime == -1 ? null : new Date(tmpTime);
+        long tmpUpdatedTime = in.readLong();
+        this.updatedTime = tmpUpdatedTime == -1 ? null : new Date(tmpUpdatedTime);
     }
 
     public static final Creator<MFeedItem> CREATOR = new Creator<MFeedItem>() {

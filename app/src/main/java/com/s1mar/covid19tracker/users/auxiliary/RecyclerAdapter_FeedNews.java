@@ -7,12 +7,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Function;
 import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.models.MFeedItem;
 import com.s1mar.covid19tracker.databinding.ItemCardFeedNewsItemBinding;
 import com.s1mar.covid19tracker.functional_interfaces.IAction;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapter_FeedNews.ViewHolder> {
@@ -33,8 +39,22 @@ public class RecyclerAdapter_FeedNews extends RecyclerView.Adapter<RecyclerAdapt
         if(dataSet!=null){
             if(isReset){mDataSet.clear();}
             mDataSet.addAll(dataSet);
+            mDataSet = sortDataSetAccordingToTimeStamp(mDataSet);
             notifyDataSetChanged();
         }
+    }
+
+    private List<MFeedItem> sortDataSetAccordingToTimeStamp(List<MFeedItem>mDataSet){
+        mDataSet = Stream.of(mDataSet).sortBy(new Function<MFeedItem, Date>() {
+            @Override
+            public Date apply(MFeedItem feedItem) {
+
+                return feedItem.getTime();
+            }
+        }).toList();
+
+        Collections.reverse(mDataSet);
+        return mDataSet;
     }
 
     @NonNull
