@@ -139,16 +139,17 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 //Now,let's update the clientele health data
                 for (Map.Entry<String, Integer> entry : clientAndHealthDict.entrySet()) {
 
-                    if (entry.getValue() == null) {
+                   /* if (entry.getValue() == null) {
                         continue;
-                    } //Since the value wasn't changed, I won't update it
+                    }*/ //Since the value wasn't changed, I won't update it
 
+                    int healthStatus = entry.getValue()==null?0:entry.getValue();
                     String username = entry.getKey().split(";")[0];
                     FirebaseFirestore.getInstance().collection(Constants.USERS)
                             .whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshots -> {
                         DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
                         MUser userClient = queryDocumentSnapshots.getDocuments().get(0).toObject(MUser.class);
-                        userClient.setHealthStatus(entry.getValue());
+                        userClient.setHealthStatus(healthStatus);
 
                         /*FirebaseFirestore.getInstance()
                                 .document(documentReference.getPath()).update("healthStatus", entry.getValue());*/
