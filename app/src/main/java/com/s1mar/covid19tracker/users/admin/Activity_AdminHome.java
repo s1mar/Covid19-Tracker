@@ -80,6 +80,8 @@ public class Activity_AdminHome extends AppCompatActivity {
                                                    numEmpInfected++;
                                                    break;
                                            }
+                                       }else{
+                                           numEmpNormal++;
                                        }
                                 }
 
