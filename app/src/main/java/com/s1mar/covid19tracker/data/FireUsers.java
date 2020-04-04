@@ -1,9 +1,20 @@
 package com.s1mar.covid19tracker.data;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+import com.s1mar.covid19tracker.data.exceptions.NoDataConnectivityException;
 import com.s1mar.covid19tracker.data.models.MUser;
 import com.s1mar.covid19tracker.functional_interfaces.IAction;
+import com.s1mar.covid19tracker.utils.NetworkUtils;
+
+import java.util.Collections;
 
 import static com.s1mar.covid19tracker.data.Constants.FIELD_UNAME;
 import static com.s1mar.covid19tracker.data.Constants.USERS;
@@ -73,6 +84,26 @@ public class FireUsers {
 
     }
 
+
+    public static void addOrUpdateUSer(MUser mUser,IAction action) {
+        if(!NetworkUtils.hasNetworkConnectivity(FirebaseFirestore.getInstance().getApp().getApplicationContext())){
+                action.onResult(new NoDataConnectivityException());
+        }
+        FirebaseFirestore db =  FirebaseFirestore.getInstance();
+        db.runTransaction(new Transaction.Function<Void>() {
+
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                    transaction.set(db.collection(USERS).document(mUser.getId()),mUser);
+                //Means Success
+                return null;
+            }
+        }).addOnFailureListener(action::onResult).addOnSuccessListener(action::onResult);
+
+    }
+
+    @Deprecated
     public static void addUser(MUser mUser,IAction action){
 
         //Check to see whether the user already exists in the system

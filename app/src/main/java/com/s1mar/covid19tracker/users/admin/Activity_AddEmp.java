@@ -79,8 +79,6 @@ public class Activity_AddEmp extends AppCompatActivity {
             userToBeAdded.setIsClient(true);
         }
 
-
-
         FireUsers.addUser(userToBeAdded,result -> {
             LoadingAnimationHelper.dismissWithDelay(this,MSG_DURATION*1000);
             if(result instanceof Boolean){

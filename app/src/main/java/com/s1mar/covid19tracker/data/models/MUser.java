@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MUser implements Parcelable {
     @DocumentId
@@ -29,6 +30,12 @@ public class MUser implements Parcelable {
 
     public MUser() {
 
+    }
+
+
+    public void addClient(String client){
+        if(clients==null){clients = new ArrayList<>(0);}
+        if(!clients.contains(client)){clients.add(client);}
     }
 
     public boolean removeFromAssignedEmployee(String username){

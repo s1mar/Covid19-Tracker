@@ -28,6 +28,16 @@ public class LoadingAnimationHelper {
 
     }
 
+    public static void showMessage(Activity activity, @Nullable String message, Long millisecondsDelay)
+    {
+        //create the view if necessary and then hook it with a message
+        ActLoaderBinding binder = initiateSplinterSequence(activity);
+        binder.loaderView.setVisibility(View.VISIBLE);
+        binder.loaderText.setText(message);
+        dismissWithDelay(activity,millisecondsDelay);
+
+    }
+
     private static ActLoaderBinding initiateSplinterSequence(Activity activity){
         View animatorView =   activity.getWindow().findViewById(viewID);
         if(animatorView==null){

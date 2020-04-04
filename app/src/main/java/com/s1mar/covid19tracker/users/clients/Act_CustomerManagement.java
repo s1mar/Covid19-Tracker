@@ -33,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 import com.google.gson.Gson;
 import com.s1mar.covid19tracker.R;
 import com.s1mar.covid19tracker.data.Constants;
@@ -48,6 +49,7 @@ import com.s1mar.covid19tracker.utils.Toaster;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -119,6 +121,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
         });
     }
 
+    @Deprecated
     private void update(){
 
 
@@ -144,30 +147,34 @@ public class Act_CustomerManagement extends AppCompatActivity {
                         continue;
                     }*/ //Since the value wasn't changed, I won't update it
 
-                    int healthStatus = entry.getValue()==null?0:entry.getValue();
+                    Integer healthStatus = entry.getValue();
                     String username = entry.getKey().split(";")[0];
                     FirebaseFirestore.getInstance().collection(Constants.USERS)
                             .whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshots -> {
                         DocumentReference documentReference = queryDocumentSnapshots.getDocuments().get(0).getReference();
                         MUser userClient = queryDocumentSnapshots.getDocuments().get(0).toObject(MUser.class);
-                        userClient.setHealthStatus(healthStatus);
+
+                        if(userClient!=null) {
+                            if (healthStatus != null) {
+                                userClient.setHealthStatus(healthStatus);
+                            }
 
                         /*FirebaseFirestore.getInstance()
                                 .document(documentReference.getPath()).update("healthStatus", entry.getValue());*/
 
-                        userClient.addToAssignedEmployees(mUser.getUsername());
+                            userClient.addToAssignedEmployees(mUser.getUsername());
 
-                        //Associate the client with its assigned employee
-                        //FirebaseFirestore.getInstance().document(documentReference.getPath()).update("")
-                        FirebaseFirestore.getInstance().document(documentReference.getPath()).set(userClient);
-
+                            //Associate the client with its assigned employee
+                            //FirebaseFirestore.getInstance().document(documentReference.getPath()).update("")
+                            FirebaseFirestore.getInstance().document(documentReference.getPath()).set(userClient);
+                        }
                             //TODO I've added the id func to the data model, these calls can now be reduced and optimized
                         //Unassociate all clients that are no longer associated with this employee
                         for(MUser userClientX : mAdapter.clientsThatNoLongerBelongToThisEmployee()){
 
                                FirebaseFirestore.getInstance().collection(Constants.USERS).
                                        whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshotsTwo -> {
-                                   DocumentReference documentReferenceTwo = queryDocumentSnapshots.getDocuments().get(0).getReference();
+                                   DocumentReference documentReferenceTwo = queryDocumentSnapshotsTwo.getDocuments().get(0).getReference();
                                    userClientX.removeFromAssignedEmployee(mUser.getUsername());
                                    FirebaseFirestore.getInstance().document(documentReferenceTwo.getPath()).set(userClientX);
                                });
@@ -186,6 +193,62 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
     }
 
+
+    private void updateX(){
+
+
+        if(!NetworkUtils.hasNetworkConnectivity(this))
+        {
+            LoadingAnimationHelper.showMessage(this,"Please ensure that you have data connectivity and try again!",TIME_DELAY);
+            return;
+        }
+
+
+
+        //Clients who do not belong to the selected employee
+        List<MUser> notClientsAnymore = mAdapter.clientsThatNoLongerBelongToThisEmployee();
+
+        //Clients that belong
+        HashMap<String,Integer> clientsUpdateWithHealth = mAdapter.getClientData();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+
+                //Task 1; deal with clients
+                if(clientsUpdateWithHealth!=null && !clientsUpdateWithHealth.isEmpty()){
+                    //We have some updates to make
+                    List<DocumentReference> clientsAsReference = new ArrayList<>(0);
+                    for(String clientUsername :clientsUpdateWithHealth.keySet()){
+                        mUser.addClient(clientUsername);
+                        db.collection(Constants.USERS).whereEqualTo("username",clientUsername).get().getResult().getDocuments().get(0);
+                    }
+
+
+
+
+
+
+                    //Update the user with the client data
+                    transaction.set(db.collection(Constants.USERS).document(mUser.getId()),mUser);
+
+                    //Update the clients with assigned employees
+
+
+
+
+                }
+
+                //Task 2; deal with no longer clients
+
+                return null;
+            }
+        });
+
+
+    }
 
     private void initializationCLient(){
 
@@ -230,6 +293,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
         });
 
     }
+
     private void initialization(){
 
         FirebaseFirestore.getInstance().collection(Constants.USERS).whereEqualTo("client",true).addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -272,8 +336,8 @@ public class Act_CustomerManagement extends AppCompatActivity {
     private static class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder>{
 
         private List<MUser> clients = new ArrayList<>(0);
-        private HashMap<MUser,Boolean> Map_IsCheckedAsClient = new HashMap<>(0);
-        private HashMap<MUser,Integer> Map_ClientHealth = new HashMap<>(0);
+        private HashMap<String,Boolean> Map_IsCheckedAsClient = new HashMap<>(0);  //username,boolean
+        private HashMap<String,Integer> Map_ClientHealth = new HashMap<>(0);      //username,health-status
 
         private MUser user;
         private int configValue;
@@ -299,7 +363,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                      for(MUser u : dataSet){
 
                             if(u.getUsername().equals(username) && u.getName().equals(name)){
-                                Map_IsCheckedAsClient.put(u,true);
+                                Map_IsCheckedAsClient.put(username,true);
                             }
                      }
 
@@ -425,8 +489,8 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 holder.binder.red.setChecked(true);
             }
 
-            if(Map_IsCheckedAsClient.containsKey(client) && Map_IsCheckedAsClient.get(client)!=null){
-                    holder.binder.checkMyClient.setChecked(Map_IsCheckedAsClient.get(client));
+            if(Map_IsCheckedAsClient.containsKey(client.getUsername()) && Map_IsCheckedAsClient.get(client.getUsername())!=null){
+                    holder.binder.checkMyClient.setChecked(Map_IsCheckedAsClient.get(client.getUsername()));
                     holder.enableChangeHealthStatusView(true);
             }
             else {
@@ -435,12 +499,12 @@ public class Act_CustomerManagement extends AppCompatActivity {
 
             holder.binder.checkMyClient.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if(isChecked){
-                    Map_IsCheckedAsClient.put(client,true);
+                    Map_IsCheckedAsClient.put(client.getUsername(),true);
                     holder.enableChangeHealthStatusView(true);
                 }
                 else{
-                   Map_IsCheckedAsClient.put(client,false);
-                   Map_ClientHealth.remove(client);//Since it's a not client hence the privilege to change health data is also gone
+                   Map_IsCheckedAsClient.put(client.getUsername(),false);
+                   Map_ClientHealth.remove(client.getUsername());//Since it's a not client hence the privilege to change health data is also gone
                    holder.enableChangeHealthStatusView(false);
                 }
             });
@@ -450,13 +514,13 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                     if(checkedId==R.id.green){
-                        Map_ClientHealth.put(client,0);
+                        Map_ClientHealth.put(client.getUsername(),0);
                     }
                     else if(checkedId==R.id.yellow){
-                        Map_ClientHealth.put(client,1);
+                        Map_ClientHealth.put(client.getUsername(),1);
                     }
                     else if(checkedId==R.id.red){
-                        Map_ClientHealth.put(client,2);
+                        Map_ClientHealth.put(client.getUsername(),2);
                     }
                 }
             });
@@ -471,24 +535,31 @@ public class Act_CustomerManagement extends AppCompatActivity {
         HashMap<String,Integer> getClientData(){
             HashMap<String,Integer> clientAndHealthDataMap = new HashMap<>(0);
             if(Map_IsCheckedAsClient!=null && !Map_IsCheckedAsClient.isEmpty()){
+               Stream<MUser> userStream = Stream.of(clients);
+               List<MUser> relevantUsers = new ArrayList<>(0);
+               List<String> clientsChecked = Stream.of(Map_IsCheckedAsClient.keySet()).filter(value -> {
+                    return Map_IsCheckedAsClient.get(value)!=null && Map_IsCheckedAsClient.get(value);
+               }).toList();
 
-                List<MUser> relevantUsers = Stream.of(Map_IsCheckedAsClient).filter(new Predicate<Map.Entry<MUser, Boolean>>() {
-                    @Override
-                    public boolean test(Map.Entry<MUser, Boolean> value) {
-                        return value.getValue();
-                    }
-                }).map(new Function<Map.Entry<MUser, Boolean>, MUser>() {
+               for(String userName: clientsChecked)
+               {
+                   MUser user = userStream.filter(new Predicate<MUser>() {
+                       @Override
+                       public boolean test(MUser value) {
+                           return value.getUsername().equals(userName);
+                       }
+                   }).findFirst().orElse(null);
 
-                    @Override
-                    public MUser apply(Map.Entry<MUser, Boolean> mUserBooleanEntry) {
-                        return mUserBooleanEntry.getKey();
-                    }
-                }).toList();
+                   if(user!=null){
+                       relevantUsers.add(user);}
+
+               }
 
 
                 for(MUser user:relevantUsers){
                     String key = user.getUsername()+";"+user.getName();
-                    Integer healthValue = Map_ClientHealth.get(user);  //If this sends NUll value, that means the state of that client wasn't changed
+                    //String key = user.getUsername();
+                    Integer healthValue = Map_ClientHealth.get(user.getUsername());  //If this sends NUll value, that means the state of that client wasn't changed
                     clientAndHealthDataMap.put(key,healthValue);
                 }
             }
@@ -497,19 +568,25 @@ public class Act_CustomerManagement extends AppCompatActivity {
         }
 
         List<MUser> clientsThatNoLongerBelongToThisEmployee(){
-            return Stream.of(Map_IsCheckedAsClient).filter(new Predicate<Map.Entry<MUser, Boolean>>() {
-                @Override
-                public boolean test(Map.Entry<MUser, Boolean> value) {
-                    return !value.getValue();
-                }
-            }).map(new Function<Map.Entry<MUser, Boolean>, MUser>() {
 
-                @Override
-                public MUser apply(Map.Entry<MUser, Boolean> mUserBooleanEntry) {
-                    return mUserBooleanEntry.getKey();
-                }
-            }).toList();
+            List<MUser> usersNotClientsAnymore = new ArrayList<>(0);
+            Stream<MUser> userStream = Stream.of(clients);
 
+            if(Map_IsCheckedAsClient!=null && !Map_IsCheckedAsClient.isEmpty()) {
+                for(Map.Entry<String,Boolean> entry : Map_IsCheckedAsClient.entrySet()){
+                        if(entry.getValue()!=null && !entry.getValue()){
+                            MUser userRec = userStream.filter(new Predicate<MUser>() {
+                                @Override
+                                public boolean test(MUser value) {
+                                    return value.getUsername().equals(entry.getKey());
+                                }
+                            }).findFirst().orElse(null);
+                            if(userRec!=null){usersNotClientsAnymore.add(userRec);}
+                    }
+                }
+
+            }
+                return usersNotClientsAnymore;
         }
 
         @Override
