@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MFeedItem implements Parcelable {
@@ -46,7 +47,14 @@ public class MFeedItem implements Parcelable {
     }
 
     public Date getTime() {
-        return time == null?updatedTime:time;
+         if(time != null){
+             return time;
+         }else if(updatedTime!=null){
+             return updatedTime;
+         }
+         else{
+             return new Date();
+         }
 
     }
 
