@@ -173,8 +173,9 @@ public class Act_CustomerManagement extends AppCompatActivity {
                         for(MUser userClientX : mAdapter.clientsThatNoLongerBelongToThisEmployee()){
 
                                FirebaseFirestore.getInstance().collection(Constants.USERS).
-                                       whereEqualTo("username", username).get().addOnSuccessListener(queryDocumentSnapshotsTwo -> {
+                                       whereEqualTo("username", userClientX.getUsername()).get().addOnSuccessListener(queryDocumentSnapshotsTwo -> {
                                    DocumentReference documentReferenceTwo = queryDocumentSnapshotsTwo.getDocuments().get(0).getReference();
+
                                    userClientX.removeFromAssignedEmployee(mUser.getUsername());
                                    FirebaseFirestore.getInstance().document(documentReferenceTwo.getPath()).set(userClientX);
                                });
@@ -540,15 +541,18 @@ public class Act_CustomerManagement extends AppCompatActivity {
                List<String> clientsChecked = Stream.of(Map_IsCheckedAsClient.keySet()).filter(value -> {
                     return Map_IsCheckedAsClient.get(value)!=null && Map_IsCheckedAsClient.get(value);
                }).toList();
+                userStream.close();
 
                for(String userName: clientsChecked)
                {
-                   MUser user = userStream.filter(new Predicate<MUser>() {
+                   MUser user = Stream.of(clients).filter(new Predicate<MUser>() {
                        @Override
                        public boolean test(MUser value) {
                            return value.getUsername().equals(userName);
                        }
                    }).findFirst().orElse(null);
+
+
 
                    if(user!=null){
                        relevantUsers.add(user);}
@@ -586,6 +590,7 @@ public class Act_CustomerManagement extends AppCompatActivity {
                 }
 
             }
+            userStream.close();
                 return usersNotClientsAnymore;
         }
 
