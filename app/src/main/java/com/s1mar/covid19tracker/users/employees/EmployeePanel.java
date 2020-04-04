@@ -187,7 +187,10 @@ public class EmployeePanel extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mUser = new Gson().fromJson(PlayerPrefs.getString(EmployeePanel.this,"muser"),MUser.class);
+
+        if(configValue!=2)
+        {mUser = new Gson().fromJson(PlayerPrefs.getString(EmployeePanel.this,"muser"),MUser.class);}
+
         determineAndSetClientHealthStatus(mUser,result -> {
             setHealthStatus(mBinder.clientHealthStatus.imgHolder,(Integer)result);
         });
